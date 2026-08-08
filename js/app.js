@@ -360,6 +360,10 @@ window.autoAllocateBudgets = function() {
 // --- AI Companion Drawer Engine & Interactive Custom Messaging ---
 window.openAIDrawer = function() {
   document.getElementById('ai-drawer').classList.add('open');
+  setTimeout(() => {
+    const input = document.getElementById('ai-custom-input');
+    if (input) input.focus();
+  }, 200);
 };
 
 window.closeAIDrawer = function() {

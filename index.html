@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Money Companion - Personal Budget Tracker</title>
   <meta name="description" content="A simple, lightweight, beginner-friendly personal budget tracker for daily financial clarity.">
-  <link rel="stylesheet" href="css/styles.css?v=2">
+  <link rel="stylesheet" href="css/styles.css?v=3">
   <link rel="icon" href="assets/ai_companion_avatar.jpg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#6366F1">
@@ -108,9 +108,15 @@
         <button onclick="window.closeAIDrawer()" class="btn-icon">✕</button>
       </div>
 
+      <!-- Top AI Chat Message Input Box (100% Keyboard Friendly on Mobile) -->
+      <form onsubmit="window.handleAIChatSubmit(event)" style="padding: 12px 16px; border-bottom: 1px solid var(--border-color); background: var(--bg-surface-elevated); display: flex; gap: 8px; flex-shrink: 0; z-index: 10;">
+        <input type="text" id="ai-custom-input" placeholder="Ask AI anything (e.g. Can I buy a watch for $150?)..." class="form-input" style="flex: 1; height: 42px; font-size: 13px; background: var(--bg-surface);">
+        <button type="submit" class="btn-primary" style="padding: 0 16px; height: 42px; font-size: 13px; white-space: nowrap;">Send ✨</button>
+      </form>
+
       <div id="ai-chat-body" class="ai-chat-body">
         <div class="chat-bubble ai">
-          Hi Alex! 👋 I'm your Personal Money Companion. Type any custom question below or tap a quick prompt card!
+          Hi Alex! 👋 I'm your Personal Money Companion. Type any question above or tap a quick prompt card below!
         </div>
 
         <!-- Quick AI Prompt Cards -->
@@ -137,12 +143,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Interactive Custom Chat Message Input Box -->
-      <form onsubmit="window.handleAIChatSubmit(event)" style="padding: 12px 16px; border-top: 1px solid var(--border-color); background: var(--bg-surface); display: flex; gap: 8px;">
-        <input type="text" id="ai-custom-input" placeholder="Type a message (e.g. Can I buy a watch for $150?)" class="form-input" style="flex: 1; height: 42px; font-size: 13px;">
-        <button type="submit" class="btn-primary" style="padding: 0 16px; height: 42px; font-size: 13px;">Send ✨</button>
-      </form>
     </div>
 
     <!-- Quick Add Modal (< 10-Second Entry System) -->
@@ -382,10 +382,10 @@
 
   </div>
 
-  <script type="module" src="js/app.js?v=2"></script>
+  <script type="module" src="js/app.js?v=3"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js?v=2').then(reg => reg.update()).catch(err => console.log('SW registration failed:', err));
+      navigator.serviceWorker.register('sw.js?v=3').then(reg => reg.update()).catch(err => console.log('SW registration failed:', err));
     }
   </script>
 </body>
