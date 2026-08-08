@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Money Companion - Personal Budget Tracker</title>
   <meta name="description" content="A simple, lightweight, beginner-friendly personal budget tracker for daily financial clarity.">
-  <link rel="stylesheet" href="css/styles.css?v=35">
+  <link rel="stylesheet" href="css/styles.css?v=36">
   <link rel="icon" href="assets/ai_companion_avatar.jpg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#6366F1">
@@ -131,24 +131,24 @@
 
         <!-- Quick AI Prompt Cards -->
         <div class="quick-prompts-container">
-          <div class="prompt-card" onclick="window.sendAIQuery('Can I buy this?')">
-            <span>🤔 Can I buy an item?</span>
+          <div class="prompt-card" onclick="window.sendAIQuery('What is my financial health score?')">
+            <span>📈 What is my financial health score?</span>
+            <span style="color: var(--accent-emerald);">→</span>
+          </div>
+          <div class="prompt-card" onclick="window.sendAIQuery('How much net cash do I have?')">
+            <span>💵 How much net cash do I have left?</span>
+            <span style="color: var(--accent-emerald);">→</span>
+          </div>
+          <div class="prompt-card" onclick="window.sendAIQuery('Log expense 50 for Coffee')">
+            <span>⚡ "Log expense 50 for Coffee"</span>
             <span style="color: var(--accent-violet);">→</span>
           </div>
-          <div class="prompt-card" onclick="window.sendAIQuery('How much budget is left?')">
-            <span>⚖️ How much budget is left?</span>
+          <div class="prompt-card" onclick="window.sendAIQuery('Add income 5000 freelance')">
+            <span>💰 "Add income 5000 freelance"</span>
             <span style="color: var(--accent-violet);">→</span>
           </div>
-          <div class="prompt-card" onclick="window.sendAIQuery('How much have I spent this month?')">
-            <span>💸 How much have I spent this month?</span>
-            <span style="color: var(--accent-violet);">→</span>
-          </div>
-          <div class="prompt-card" onclick="window.sendAIQuery('What category am I spending the most on?')">
-            <span>🏷️ What category am I spending the most on?</span>
-            <span style="color: var(--accent-violet);">→</span>
-          </div>
-          <div class="prompt-card" onclick="window.sendAIQuery('How much should I save this month?')">
-            <span>🎯 How much should I save this month?</span>
+          <div class="prompt-card" onclick="window.sendAIQuery('Can I buy a watch for 150?')">
+            <span>🤔 "Can I buy a watch for 150?"</span>
             <span style="color: var(--accent-violet);">→</span>
           </div>
         </div>
@@ -588,10 +588,10 @@
     </div>
   </div>
 
-  <script type="module" src="js/app.js?v=35"></script>
+  <script type="module" src="js/app.js?v=36"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js?v=35').then(reg => reg.update()).catch(err => console.log('SW registration failed:', err));
+      navigator.serviceWorker.register('sw.js?v=36').then(reg => reg.update()).catch(err => console.log('SW registration failed:', err));
     }
   </script>
 </body>

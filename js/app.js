@@ -693,6 +693,7 @@ window.handleAIChatSubmit = function(e) {
 
 window.sendAIQuery = function(promptText) {
   const chatBody = document.getElementById('ai-chat-body');
+  if (!chatBody) return;
   
   // User Bubble
   const userBubble = document.createElement('div');
@@ -700,15 +701,24 @@ window.sendAIQuery = function(promptText) {
   userBubble.textContent = promptText;
   chatBody.appendChild(userBubble);
 
-  // AI Response
+  // AI Response Processing
   const response = AIEngine.processQuery(promptText);
 
   setTimeout(() => {
     const aiBubble = document.createElement('div');
     aiBubble.className = 'chat-bubble ai';
-    aiBubble.innerHTML = `<strong>${response.title}</strong><br/>${response.text.replace(/\*\*/g, '')}`;
+    const formattedText = response.text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n/g, '<br/>');
+
+    aiBubble.innerHTML = `<strong>${response.title}</strong><br/>${formattedText}`;
     chatBody.appendChild(aiBubble);
     chatBody.scrollTop = chatBody.scrollHeight;
+
+    // If AI executed an action, update app view in-place preserving scroll!
+    if (response.executedAction) {
+      window.switchTab(currentTab, true);
+    }
   }, 200);
 
   chatBody.scrollTop = chatBody.scrollHeight;
