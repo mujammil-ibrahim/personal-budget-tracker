@@ -185,6 +185,31 @@ window.handleIncomeSubmit = function(e) {
 };
 
 // --- Custom Budget Allocation Modal ---
+window.openStrategyModal = function() {
+  document.getElementById('budget-strategy-modal').classList.add('active');
+};
+
+window.closeStrategyModal = function() {
+  document.getElementById('budget-strategy-modal').classList.remove('active');
+};
+
+window.handleStrategySubmit = function(e) {
+  e.preventDefault();
+  const strategy = document.getElementById('budget-strategy-select').value;
+  dbStore.autoSetBudgetStrategy(strategy);
+  window.closeStrategyModal();
+  alert('✨ Budget strategy applied successfully based on your monthly income!');
+  window.switchTab(currentTab);
+};
+
+window.undoResetBudgets = function() {
+  if (confirm('Are you sure you want to reset and clear all budget limits for this month? You can auto-set any budget strategy again anytime!')) {
+    dbStore.resetCurrentMonthBudgets();
+    alert('↺ Monthly budgets reset successfully!');
+    window.switchTab(currentTab);
+  }
+};
+
 window.openAddBudgetModal = function() {
   document.getElementById('add-budget-modal').classList.add('active');
 };

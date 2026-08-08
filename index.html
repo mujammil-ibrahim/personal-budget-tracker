@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Money Companion - Personal Budget Tracker</title>
   <meta name="description" content="A simple, lightweight, beginner-friendly personal budget tracker for daily financial clarity.">
-  <link rel="stylesheet" href="css/styles.css?v=5">
+  <link rel="stylesheet" href="css/styles.css?v=6">
   <link rel="icon" href="assets/ai_companion_avatar.jpg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#6366F1">
@@ -243,35 +243,61 @@
       </div>
     </div>
 
-    <!-- Budget Allocation Modal (New Custom Category Budget) -->
+    <!-- Add Custom Budget Modal -->
     <div id="add-budget-modal" class="modal-overlay">
       <div class="modal-content">
         <div class="modal-header">
-          <h3 class="modal-title">⚖️ Set Category Budget</h3>
+          <h3 class="modal-title">📊 Add Custom Category Budget</h3>
           <button onclick="window.closeAddBudgetModal()" class="btn-icon">✕</button>
         </div>
         <form onsubmit="window.handleBudgetSubmit(event)">
           <div class="form-group">
             <label class="form-label">Category</label>
-            <select id="b-category" class="form-select">
+            <select id="bg-category" class="form-select">
               <option value="Rent">Rent & Housing</option>
               <option value="Dining">Dining & Food</option>
-              <option value="Utilities">Utilities & Bills</option>
+              <option value="Grocery">Grocery & Household</option>
               <option value="Shopping">Shopping & Clothes</option>
-              <option value="Transport">Transport & Fuel</option>
+              <option value="Utilities">Utilities & Bills</option>
+              <option value="Travel">Travel & Transport</option>
               <option value="Entertainment">Entertainment & Fun</option>
-              <option value="Health">Health & Fitness</option>
-              <option value="Grocery">Grocery</option>
-              <option value="Misc">Miscellaneous</option>
             </select>
           </div>
           <div class="form-group">
-            <label class="form-label">Monthly Allocated Budget Amount</label>
-            <input type="number" step="0.01" id="b-allocated" placeholder="e.g. 500" class="form-input" required>
+            <label class="form-label">Allocated Monthly Limit</label>
+            <input type="number" step="0.01" id="bg-amount" placeholder="e.g. 500.00" class="form-input" required>
           </div>
           <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
             <button type="button" onclick="window.closeAddBudgetModal()" class="btn-primary" style="background: var(--bg-surface-elevated); color: var(--text-primary);">Cancel</button>
             <button type="submit" class="btn-primary">Save Budget</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Budgeting Strategy Selection Modal -->
+    <div id="budget-strategy-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">✨ Choose Budgeting Strategy</h3>
+          <button onclick="window.closeStrategyModal()" class="btn-icon">✕</button>
+        </div>
+        <form onsubmit="window.handleStrategySubmit(event)">
+          <div class="form-group">
+            <label class="form-label">Select Budgeting Framework</label>
+            <select id="budget-strategy-select" class="form-select" style="font-size: 14px; font-weight: 600;">
+              <option value="50_30_20">🟢 50 / 30 / 20 Rule (50% Needs, 30% Wants, 20% Savings) - Standard</option>
+              <option value="70_20_10">🔵 70 / 20 / 10 Rule (70% Living, 20% Savings, 10% Fun)</option>
+              <option value="60_30_10">🚀 60 / 30 / 10 Rule (60% Essentials, 30% Savings, 10% Fun) - High Savings</option>
+              <option value="80_20">🟡 80 / 20 Rule (80% Living & Wants, 20% Savings) - Simplified</option>
+            </select>
+          </div>
+          <div style="background: var(--bg-surface-elevated); padding: 14px; border-radius: var(--radius-md); font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px;">
+            💡 <strong>How it works:</strong> The app will automatically calculate category limits based on your monthly income. Existing budgets for this month will be replaced. You can tap <strong>↺ Reset / Undo</strong> anytime to clear or revert!
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 12px;">
+            <button type="button" onclick="window.closeStrategyModal()" class="btn-primary" style="background: var(--bg-surface-elevated); color: var(--text-primary);">Cancel</button>
+            <button type="submit" class="btn-primary btn-emerald">Apply Strategy ✨</button>
           </div>
         </form>
       </div>
@@ -395,10 +421,10 @@
 
   </div>
 
-  <script type="module" src="js/app.js?v=5"></script>
+  <script type="module" src="js/app.js?v=6"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js?v=5').then(reg => reg.update()).catch(err => console.log('SW registration failed:', err));
+      navigator.serviceWorker.register('sw.js?v=6').then(reg => reg.update()).catch(err => console.log('SW registration failed:', err));
     }
   </script>
 </body>

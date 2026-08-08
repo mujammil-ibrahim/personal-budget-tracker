@@ -259,6 +259,82 @@ class Store {
     this.saveData();
   }
 
+  resetCurrentMonthBudgets() {
+    const curMonth = new Date().getMonth() + 1;
+    const curYear = new Date().getFullYear();
+    this.data.Budgets = this.data.Budgets.filter(b => !(b.month === curMonth && b.year === curYear));
+    this.saveData();
+    this.recalculateBudgets();
+  }
+
+  autoSetBudgetStrategy(strategy = '50_30_20') {
+    const curMonth = new Date().getMonth() + 1;
+    const curYear = new Date().getFullYear();
+    const metrics = this.getDashboardMetrics();
+    const income = metrics.monthIncome > 0 ? metrics.monthIncome : 4200;
+
+    let needsPct = 0.50;
+    let wantsPct = 0.30;
+    let savingsPct = 0.20;
+
+    if (strategy === '70_20_10') {
+      needsPct = 0.70;
+      wantsPct = 0.20;
+      savingsPct = 0.10;
+    } else if (strategy === '60_30_10') {
+      needsPct = 0.60;
+      wantsPct = 0.10;
+      savingsPct = 0.30;
+    } else if (strategy === '80_20') {
+      needsPct = 0.60;
+      wantsPct = 0.20;
+      savingsPct = 0.20;
+    }
+
+    // Reset current month budgets first
+    this.resetCurrentMonthBudgets();
+
+    // Calculate allocations
+    const needsBudget = Math.round(income * needsPct);
+    const wantsBudget = Math.round(income * wantsPct);
+
+    const rentBudget = Math.round(needsBudget * 0.45);
+    const utilitiesBudget = Math.round(needsBudget * 0.20);
+    const groceryBudget = Math.round(needsBudget * 0.35);
+
+    const diningBudget = Math.round(wantsBudget * 0.50);
+    const shoppingBudget = Math.round(wantsBudget * 0.50);
+
+    const categories = [
+      { category: 'Rent', amount: rentBudget },
+      { category: 'Utilities', amount: utilitiesBudget },
+      { category: 'Dining', amount: diningBudget },
+      { category: 'Shopping', amount: shoppingBudget },
+      { category: 'Grocery', amount: groceryBudget }
+    ];
+
+    categories.forEach(item => {
+      if (item.amount > 0) {
+        this.data.Budgets.push({
+          id: 'b_auto_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+          user_id: 'u_1',
+          category: item.category,
+          allocated_amount: item.amount,
+          spent_amount: 0,
+          month: curMonth,
+          year: curYear
+        });
+      }
+    });
+
+    this.saveData();
+    this.recalculateBudgets();
+  }
+
+  autoSetBudget503020() {
+    this.autoSetBudgetStrategy('50_30_20');
+  }
+
   updateFixedSalary(amount) {
     const user = this.data.Users[0];
     if (user) {

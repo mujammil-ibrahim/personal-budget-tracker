@@ -12,13 +12,14 @@ export function renderBudget() {
 
   return `
     <div class="page-view animate-fade-in">
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
         <div>
           <h2 style="font-size: 22px; font-weight: 800;">Monthly Budgets</h2>
-          <p style="font-size: 13px; color: var(--text-secondary);">Set category limits to keep spending under control</p>
+          <p style="font-size: 13px; color: var(--text-secondary);">Set category limits & pick your preferred budgeting rule</p>
         </div>
-        <div style="display: flex; gap: 10px;">
-          <button onclick="window.autoAllocateBudgets()" class="btn-primary btn-emerald" style="font-size: 13px;">🪄 Auto-Set 50/30/20</button>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button onclick="window.openStrategyModal()" class="btn-primary btn-emerald" style="font-size: 13px;">✨ Auto-Set Strategy</button>
+          <button onclick="window.undoResetBudgets()" class="btn-primary" style="background: var(--bg-surface-elevated); color: var(--text-primary); border: 1px solid var(--border-color); font-size: 13px;" title="Reset or Undo Auto Budgets">↺ Reset / Undo</button>
           <button onclick="window.openAddBudgetModal()" class="btn-primary" style="font-size: 13px;">+ New Budget</button>
         </div>
       </div>
