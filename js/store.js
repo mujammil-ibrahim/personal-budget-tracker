@@ -501,6 +501,7 @@ class Store {
 
     const totalSavings = this.data.Savings.reduce((sum, s) => sum + parseFloat(s.amount || 0), 0);
 
+    const settings = (this.data.Settings && this.data.Settings[0]) || { currency_symbol: '$' };
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const currentMonthName = monthNames[curMonth - 1];
 
