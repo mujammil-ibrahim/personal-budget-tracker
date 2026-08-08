@@ -114,6 +114,12 @@ body {
   transition: background-color var(--transition-normal), border-color var(--transition-normal);
 }
 
+@media (max-width: 767px) {
+  .app-sidebar {
+    display: none !important; /* Hide duplicate top sidebar row on mobile phones */
+  }
+}
+
 @media (min-width: 768px) {
   .app-sidebar {
     width: 250px;
