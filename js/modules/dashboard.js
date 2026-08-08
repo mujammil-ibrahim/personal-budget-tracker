@@ -100,7 +100,7 @@ export function renderDashboard() {
       <!-- Recent Activity Table -->
       <div class="data-table-container">
         <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
-          <h3 style="font-size: 16px; font-weight: 700;">Recent Transactions</h3>
+          <h3 style="font-size: 16px; font-weight: 700;">Recent Transactions <span style="font-size: 11px; color: var(--accent-indigo); font-weight: 600; margin-left: 4px;">(↔ Swipe)</span></h3>
           <button onclick="window.switchTab('expenses')" style="background: none; border: none; color: var(--accent-indigo); font-weight: 600; font-size: 13px; cursor: pointer;">View All →</button>
         </div>
         <table class="data-table">
