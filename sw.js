@@ -1,23 +1,23 @@
 /* Service Worker for Offline PWA Phone Access (Network-First Strategy) */
-const CACHE_NAME = 'money-companion-cache-v20';
+const CACHE_NAME = 'money-companion-cache-v21';
 const URLS_TO_CACHE = [
   './',
   './index.html',
-  './css/styles.css?v=20',
-  './js/app.js?v=20',
-  './js/store.js?v=20',
-  './js/aiEngine.js?v=20',
-  './js/modules/landing.js?v=20',
-  './js/modules/about.js?v=20',
-  './js/modules/dashboard.js?v=20',
-  './js/modules/income.js?v=20',
-  './js/modules/expenses.js?v=20',
-  './js/modules/budget.js?v=20',
-  './js/modules/savings.js?v=20',
-  './js/modules/goals.js?v=20',
-  './js/modules/wishlist.js?v=20',
-  './js/modules/reports.js?v=20',
-  './js/modules/settings.js?v=20',
+  './css/styles.css?v=21',
+  './js/app.js?v=21',
+  './js/store.js?v=21',
+  './js/aiEngine.js?v=21',
+  './js/modules/landing.js?v=21',
+  './js/modules/about.js?v=21',
+  './js/modules/dashboard.js?v=21',
+  './js/modules/income.js?v=21',
+  './js/modules/expenses.js?v=21',
+  './js/modules/budget.js?v=21',
+  './js/modules/savings.js?v=21',
+  './js/modules/goals.js?v=21',
+  './js/modules/wishlist.js?v=21',
+  './js/modules/reports.js?v=21',
+  './js/modules/settings.js?v=21',
   './assets/ai_companion_avatar.jpg'
 ];
 

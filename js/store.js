@@ -497,7 +497,8 @@ class Store {
 
     const totalSavings = this.data.Savings.reduce((sum, s) => sum + parseFloat(s.amount || 0), 0);
 
-    const settings = this.data.Settings[0] || { currency_symbol: '$' };
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const currentMonthName = monthNames[curMonth - 1];
 
     return {
       monthIncome,
@@ -508,7 +509,9 @@ class Store {
       remainingDays,
       totalSavings,
       currency: settings.currency_symbol,
-      fixedSalary: fixedSalaryAmount
+      fixedSalary: fixedSalaryAmount,
+      currentMonthName,
+      currentYear: curYear
     };
   }
 }
