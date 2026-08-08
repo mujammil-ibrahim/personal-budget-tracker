@@ -613,17 +613,25 @@ body {
   position: fixed;
   top: 0;
   right: 0;
+  bottom: 0;
   width: 100%;
   max-width: 420px;
+  height: 100dvh;
   height: 100vh;
   background: var(--bg-surface);
   border-left: 1px solid var(--border-color);
   box-shadow: var(--shadow-lg);
-  z-index: 90;
+  z-index: 100;
   transform: translateX(100%);
   transition: transform var(--transition-normal);
   display: flex;
   flex-direction: column;
+}
+
+@media (max-width: 640px) {
+  .ai-drawer {
+    max-width: 100%;
+  }
 }
 
 .ai-drawer.open {

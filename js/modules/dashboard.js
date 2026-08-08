@@ -20,16 +20,24 @@ export function renderDashboard() {
 
   return `
     <div class="page-view animate-fade-in">
-      <!-- AI Insight Banner -->
-      <div style="background: var(--accent-indigo-light); border: 1px solid var(--accent-indigo); border-radius: var(--radius-lg); padding: 16px 20px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px;">
-        <div style="display: flex; align-items: center; gap: 14px;">
-          <div style="width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-indigo), var(--accent-violet)); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: bold; flex-shrink: 0;">✨</div>
-          <div>
-            <div style="font-size: 14px; font-weight: 700; color: var(--accent-indigo); margin-bottom: 2px;">${aiTip.title}</div>
-            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.4;">${aiTip.text.replace(/\*\*/g, '')}</div>
+      <!-- AI Insight Banner with Inline Chat Bar -->
+      <div style="background: var(--accent-indigo-light); border: 1px solid var(--accent-indigo); border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 24px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <div style="width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-indigo), var(--accent-violet)); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: bold; flex-shrink: 0;">✨</div>
+            <div>
+              <div style="font-size: 14px; font-weight: 700; color: var(--accent-indigo); margin-bottom: 2px;">${aiTip.title}</div>
+              <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.4;">${aiTip.text.replace(/\*\*/g, '')}</div>
+            </div>
           </div>
+          <button onclick="window.openAIDrawer()" class="btn-primary" style="padding: 8px 14px; font-size: 12px; flex-shrink: 0;">Open Drawer</button>
         </div>
-        <button onclick="window.openAIDrawer()" class="btn-primary" style="padding: 8px 14px; font-size: 12px; flex-shrink: 0;">Ask Companion</button>
+
+        <!-- Inline AI Question Bar -->
+        <form onsubmit="window.handleInlineAISubmit(event)" style="display: flex; gap: 8px;">
+          <input type="text" id="dashboard-ai-input" placeholder="Ask AI anything (e.g. Can I buy a watch for $150?)" class="form-input" style="flex: 1; height: 40px; font-size: 13px; background: var(--bg-surface);">
+          <button type="submit" class="btn-primary" style="height: 40px; font-size: 13px; padding: 0 16px; white-space: nowrap;">Ask AI ✨</button>
+        </form>
       </div>
 
       <!-- Stat Cards Grid -->

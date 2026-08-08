@@ -366,6 +366,17 @@ window.closeAIDrawer = function() {
   document.getElementById('ai-drawer').classList.remove('open');
 };
 
+window.handleInlineAISubmit = function(e) {
+  e.preventDefault();
+  const inputEl = document.getElementById('dashboard-ai-input');
+  const text = inputEl ? inputEl.value.trim() : '';
+  if (!text) return;
+  
+  window.openAIDrawer();
+  window.sendAIQuery(text);
+  if (inputEl) inputEl.value = '';
+};
+
 window.handleAIChatSubmit = function(e) {
   e.preventDefault();
   const inputEl = document.getElementById('ai-custom-input');
