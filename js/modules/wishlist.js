@@ -18,6 +18,9 @@ export function renderWishlist() {
     if (activeTimingFilter === 'purchased') return item.status === 'purchased';
     if (item.status === 'purchased') return false; // hide purchased in active planning views
     if (activeTimingFilter === 'all') return true;
+    if (activeTimingFilter === 'now' || activeTimingFilter === 'today') {
+      return item.buy_timing === 'now' || item.buy_timing === 'today';
+    }
     return (item.buy_timing || 'month') === activeTimingFilter;
   });
 
