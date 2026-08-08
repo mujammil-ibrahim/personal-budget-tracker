@@ -21,6 +21,12 @@ export function renderDashboard() {
   const currentUser = dbStore.getCurrentUser();
   const userName = currentUser ? currentUser.name : 'Financial Explorer';
 
+  const isINR = metrics.currency === '₹';
+  const coffeeAmt = isINR ? 50 : 4.50;
+  const lunchAmt = isINR ? 150 : 12.00;
+  const groceryAmt = isINR ? 500 : 45.00;
+  const uberAmt = isINR ? 200 : 15.00;
+
   return `
     <div class="page-view animate-fade-in">
       <!-- PERSONALIZED DASHBOARD GREETING -->
@@ -112,10 +118,10 @@ export function renderDashboard() {
       <div style="margin-bottom: 24px;">
         <h3 style="font-size: 14px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">⚡ 1-Tap Quick Log (< 10s)</h3>
         <div class="quick-action-hub">
-          <div class="quick-chip" onclick="window.quickLogExpense('Dining', 4.50, 'Coffee')">☕ Coffee ${metrics.currency}4.50</div>
-          <div class="quick-chip" onclick="window.quickLogExpense('Dining', 12.00, 'Lunch Deal')">🥗 Lunch ${metrics.currency}12.00</div>
-          <div class="quick-chip" onclick="window.quickLogExpense('Shopping', 45.00, 'Grocery Run')">🛒 Grocery ${metrics.currency}45.00</div>
-          <div class="quick-chip" onclick="window.quickLogExpense('Transport', 15.00, 'Uber Ride')">🚗 Uber ${metrics.currency}15.00</div>
+          <div class="quick-chip" onclick="window.quickLogExpense('Dining', ${coffeeAmt}, 'Coffee')">☕ Coffee ${metrics.currency}${coffeeAmt}</div>
+          <div class="quick-chip" onclick="window.quickLogExpense('Dining', ${lunchAmt}, 'Lunch')">🥗 Lunch ${metrics.currency}${lunchAmt}</div>
+          <div class="quick-chip" onclick="window.quickLogExpense('Shopping', ${groceryAmt}, 'Grocery Run')">🛒 Grocery ${metrics.currency}${groceryAmt}</div>
+          <div class="quick-chip" onclick="window.quickLogExpense('Transport', ${uberAmt}, 'Uber Ride')">🚗 Uber ${metrics.currency}${uberAmt}</div>
           <div class="quick-chip" onclick="window.openQuickAddModal()" style="border-style: dashed; color: var(--accent-indigo); border-color: var(--accent-indigo);">+ Custom Entry</div>
         </div>
       </div>
