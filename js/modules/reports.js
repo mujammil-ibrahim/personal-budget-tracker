@@ -9,14 +9,23 @@ export function renderReports() {
   const expenses = dbStore.getTable('Expenses');
   const currency = metrics.currency;
 
-  // Calculate category totals
+  const curMonth = new Date().getMonth() + 1;
+  const curYear = new Date().getFullYear();
+
+  // Filter current month expenses
+  const currentExpenses = dbStore.getTable('Expenses').filter(e => {
+    const d = dbStore.parseLocalDate(e.date);
+    return (d.getMonth() + 1) === curMonth && d.getFullYear() === curYear;
+  });
+
+  // Calculate current month category totals
   const categoryTotals = {};
-  expenses.forEach(e => {
+  currentExpenses.forEach(e => {
     categoryTotals[e.category] = (categoryTotals[e.category] || 0) + parseFloat(e.amount || 0);
   });
 
   const categories = Object.keys(categoryTotals);
-  const totalExpense = metrics.monthExpenses || 1;
+  const totalExpense = currentExpenses.reduce((sum, e) => sum + parseFloat(e.amount || 0), 0) || 1;
 
   // Generate SVG Donut Chart slices
   const colors = ['#6366F1', '#10B981', '#F59E0B', '#F43F5E', '#8B5CF6', '#06B6D4', '#EC4899'];

@@ -95,7 +95,7 @@ export function renderDashboard() {
             <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">Overall Budget Health</h3>
             <p style="font-size: 13px; color: var(--text-secondary);">You've used ${budgetPct}% of your allocated monthly budget</p>
           </div>
-          <div style="font-size: 18px; font-weight: 800; color: var(--text-primary);">${metrics.currency}${metrics.monthExpenses} / ${metrics.currency}${metrics.totalAllocatedBudget}</div>
+          <div style="font-size: 18px; font-weight: 800; color: var(--text-primary);">${metrics.currency}${metrics.monthExpenses.toLocaleString('en-US', { minimumFractionDigits: 2 })} / ${metrics.currency}${metrics.totalAllocatedBudget.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
         </div>
         <div class="progress-track">
           <div class="progress-fill ${progressColorClass}" style="width: ${budgetPct}%;"></div>

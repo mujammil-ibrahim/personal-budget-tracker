@@ -319,25 +319,52 @@ class Store {
     return null;
   }
 
+  // Helper for timezone-safe date parsing
+  parseLocalDate(dateStr) {
+    if (!dateStr) return new Date();
+    if (typeof dateStr !== 'string') return new Date(dateStr);
+    if (dateStr.includes('T')) return new Date(dateStr);
+    const parts = dateStr.split('-');
+    if (parts.length === 3) {
+      return new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+    }
+    return new Date(dateStr);
+  }
+
   // --- Dynamic Business Logic Calculators ---
   recalculateBudgets() {
-    const curMonth = new Date().getMonth() + 1;
-    const curYear = new Date().getFullYear();
+    const today = new Date();
+    const curMonth = today.getMonth() + 1;
+    const curYear = today.getFullYear();
+    const activeId = this.getActiveUserId();
 
-    const currentExpenses = this.data.Expenses.filter(e => {
-      const d = new Date(e.date);
+    const userExpenses = this.getTable('Expenses');
+    const currentExpenses = userExpenses.filter(e => {
+      const d = this.parseLocalDate(e.date);
       return (d.getMonth() + 1) === curMonth && d.getFullYear() === curYear;
     });
 
     const categorySums = {};
     currentExpenses.forEach(exp => {
-      categorySums[exp.category] = (categorySums[exp.category] || 0) + parseFloat(exp.amount || 0);
+      const cat = exp.category || 'General';
+      categorySums[cat] = (categorySums[cat] || 0) + parseFloat(exp.amount || 0);
     });
 
-    this.data.Budgets.forEach(b => {
+    const userBudgets = this.getTable('Budgets');
+    userBudgets.forEach(b => {
       if (b.month === curMonth && b.year === curYear) {
         b.spent_amount = categorySums[b.category] || 0;
       }
+    });
+
+    // Auto-sync Goal current_amount with Savings deposits
+    const userGoals = this.getTable('Goals');
+    const userSavings = this.getTable('Savings');
+    userGoals.forEach(g => {
+      const goalTotal = userSavings
+        .filter(s => s.goal_id === g.id)
+        .reduce((sum, s) => sum + parseFloat(s.amount || 0), 0);
+      g.current_amount = goalTotal;
     });
 
     this.saveData();
@@ -346,7 +373,8 @@ class Store {
   resetCurrentMonthBudgets() {
     const curMonth = new Date().getMonth() + 1;
     const curYear = new Date().getFullYear();
-    this.data.Budgets = this.data.Budgets.filter(b => !(b.month === curMonth && b.year === curYear));
+    const activeId = this.getActiveUserId();
+    this.data.Budgets = this.data.Budgets.filter(b => !(b.user_id === activeId && b.month === curMonth && b.year === curYear));
     this.saveData();
     this.recalculateBudgets();
   }
@@ -354,8 +382,9 @@ class Store {
   autoSetBudgetStrategy(strategy = '50_30_20') {
     const curMonth = new Date().getMonth() + 1;
     const curYear = new Date().getFullYear();
+    const activeId = this.getActiveUserId();
     const metrics = this.getDashboardMetrics();
-    const income = metrics.monthIncome > 0 ? metrics.monthIncome : 4200;
+    const income = metrics.monthIncome > 0 ? metrics.monthIncome : (metrics.fixedSalary || 4200);
 
     let needsPct = 0.50;
     let wantsPct = 0.30;
@@ -401,7 +430,7 @@ class Store {
       if (item.amount > 0) {
         this.data.Budgets.push({
           id: 'b_auto_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
-          user_id: 'u_1',
+          user_id: activeId,
           category: item.category,
           allocated_amount: item.amount,
           spent_amount: 0,
@@ -420,7 +449,7 @@ class Store {
   }
 
   updateFixedSalary(amount) {
-    const user = this.data.Users[0];
+    const user = this.getCurrentUser() || this.data.Users[0];
     if (user) {
       user.monthly_salary = parseFloat(amount);
       this.saveData();
@@ -428,7 +457,7 @@ class Store {
   }
 
   markWishlistPurchased(itemId, paymentMethod = 'Card', finalPrice = null) {
-    const item = this.data.Wishlist.find(w => w.id === itemId);
+    const item = this.getTable('Wishlist').find(w => w.id === itemId);
     if (!item) return null;
 
     const price = finalPrice !== null && !isNaN(parseFloat(finalPrice)) ? parseFloat(finalPrice) : parseFloat(item.price || 0);
@@ -452,54 +481,60 @@ class Store {
   }
 
   getDashboardMetrics() {
-    const curMonth = new Date().getMonth() + 1;
-    const curYear = new Date().getFullYear();
+    const today = new Date();
+    const curMonth = today.getMonth() + 1;
+    const curYear = today.getFullYear();
+    const activeId = this.getActiveUserId();
 
-    // Auto-credit fixed monthly salary if no income exists yet for current month
-    const userProfile = this.data.Users[0] || { monthly_salary: 4200.0 };
-    const fixedSalaryAmount = parseFloat(userProfile.monthly_salary || 4200.0);
+    const currentUser = this.getCurrentUser() || this.data.Users[0] || { monthly_salary: 4200.0 };
+    const fixedSalaryAmount = parseFloat(currentUser.monthly_salary || 4200.0);
 
-    const hasMonthIncome = this.data.Income.some(i => {
-      const d = new Date(i.date);
+    const userIncome = this.getTable('Income');
+    const monthIncomeRecords = userIncome.filter(i => {
+      const d = this.parseLocalDate(i.date);
       return (d.getMonth() + 1) === curMonth && d.getFullYear() === curYear;
     });
 
-    if (!hasMonthIncome && fixedSalaryAmount > 0) {
+    if (monthIncomeRecords.length === 0 && fixedSalaryAmount > 0) {
       const firstOfMonth = `${curYear}-${String(curMonth).padStart(2, '0')}-01`;
-      this.data.Income.push({
-        id: 'inc_auto_' + Date.now(),
-        user_id: userProfile.id || 'u_1',
+      const autoInc = {
+        id: 'inc_auto_' + curYear + '_' + curMonth,
+        user_id: activeId,
         amount: fixedSalaryAmount,
         source_name: 'Fixed Monthly Paycheck',
         category: 'Primary',
         date: firstOfMonth,
         recurrence: 'monthly',
         notes: 'Auto-credited regular salary'
-      });
+      };
+      this.data.Income.push(autoInc);
       this.saveData();
+      monthIncomeRecords.push(autoInc);
     }
 
-    const monthIncome = this.data.Income
-      .filter(i => { const d = new Date(i.date); return (d.getMonth() + 1) === curMonth && d.getFullYear() === curYear; })
-      .reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+    const monthIncome = monthIncomeRecords.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
 
-    const monthExpenses = this.data.Expenses
-      .filter(e => { const d = new Date(e.date); return (d.getMonth() + 1) === curMonth && d.getFullYear() === curYear; })
-      .reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+    const userExpenses = this.getTable('Expenses');
+    const monthExpenseRecords = userExpenses.filter(e => {
+      const d = this.parseLocalDate(e.date);
+      return (d.getMonth() + 1) === curMonth && d.getFullYear() === curYear;
+    });
 
-    const totalAllocatedBudget = this.data.Budgets
-      .filter(b => b.month === curMonth && b.year === curYear)
-      .reduce((sum, b) => sum + parseFloat(b.allocated_amount || 0), 0);
+    const monthExpenses = monthExpenseRecords.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
 
-    const remainingBudget = Math.max(0, totalAllocatedBudget - monthExpenses);
+    const userBudgets = this.getTable('Budgets');
+    const monthBudgetRecords = userBudgets.filter(b => b.month === curMonth && b.year === curYear);
+    const totalAllocatedBudget = monthBudgetRecords.reduce((sum, b) => sum + parseFloat(b.allocated_amount || 0), 0);
 
-    // Calculate Safe Daily Spend Allowance
-    const today = new Date();
+    const unspentPool = totalAllocatedBudget > 0 ? (totalAllocatedBudget - monthExpenses) : (monthIncome - monthExpenses);
+    const remainingBudget = Math.max(0, unspentPool);
+
     const totalDaysInMonth = new Date(curYear, curMonth, 0).getDate();
     const remainingDays = Math.max(1, totalDaysInMonth - today.getDate() + 1);
-    const safeDailyLimit = Math.max(0, (remainingBudget / remainingDays)).toFixed(2);
+    const safeDailyLimit = Math.max(0, unspentPool / remainingDays).toFixed(2);
 
-    const totalSavings = this.data.Savings.reduce((sum, s) => sum + parseFloat(s.amount || 0), 0);
+    const userSavings = this.getTable('Savings');
+    const totalSavings = userSavings.reduce((sum, s) => sum + parseFloat(s.amount || 0), 0);
 
     const settings = (this.data.Settings && this.data.Settings[0]) || { currency_symbol: '$' };
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -513,7 +548,7 @@ class Store {
       safeDailyLimit: parseFloat(safeDailyLimit),
       remainingDays,
       totalSavings,
-      currency: settings.currency_symbol,
+      currency: settings.currency_symbol || '$',
       fixedSalary: fixedSalaryAmount,
       currentMonthName,
       currentYear: curYear
