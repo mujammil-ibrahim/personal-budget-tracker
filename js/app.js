@@ -23,6 +23,7 @@ let currentTab = 'dashboard';
 // --- Tab Switcher & Navigation ---
 window.switchTab = function(tabName) {
   currentTab = tabName || 'dashboard';
+  document.body.className = 'tab-' + currentTab;
 
   // Sync Currency Dropdown
   const settings = dbStore.getTable('Settings')[0];
