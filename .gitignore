@@ -1,0 +1,4 @@
+.vercel
+.ds_store
+*.log
+__pycache__/

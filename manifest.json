@@ -1,0 +1,16 @@
+{
+  "name": "Money Companion - Personal Budget Tracker",
+  "short_name": "Money Companion",
+  "description": "A simple, lightweight, beginner-friendly personal budget tracker.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0B0F19",
+  "theme_color": "#6366F1",
+  "icons": [
+    {
+      "src": "assets/ai_companion_avatar.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

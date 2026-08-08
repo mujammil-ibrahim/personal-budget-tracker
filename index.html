@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Money Companion - Personal Budget Tracker</title>
+  <meta name="description" content="A simple, lightweight, beginner-friendly personal budget tracker for daily financial clarity.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="assets/ai_companion_avatar.jpg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6366F1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+  <div id="app-root">
+    <!-- Navigation Sidebar -->
+    <aside class="app-sidebar">
+      <div class="brand-header">
+        <a href="#" class="brand-logo" onclick="window.switchTab('dashboard')">
+          <div class="brand-icon">💎</div>
+          <span class="brand-name">Money Companion</span>
+        </a>
+      </div>
+
+      <nav class="nav-links">
+        <button class="nav-item active" data-tab="dashboard" onclick="window.switchTab('dashboard')">
+          <span style="font-size: 16px;">🏠</span> Dashboard
+        </button>
+        <button class="nav-item" data-tab="income" onclick="window.switchTab('income')">
+          <span style="font-size: 16px;">💵</span> Income
+        </button>
+        <button class="nav-item" data-tab="expenses" onclick="window.switchTab('expenses')">
+          <span style="font-size: 16px;">💸</span> Expenses
+        </button>
+        <button class="nav-item" data-tab="budget" onclick="window.switchTab('budget')">
+          <span style="font-size: 16px;">⚖️</span> Budget
+        </button>
+        <button class="nav-item" data-tab="savings" onclick="window.switchTab('savings')">
+          <span style="font-size: 16px;">🏦</span> Savings
+        </button>
+        <button class="nav-item" data-tab="goals" onclick="window.switchTab('goals')">
+          <span style="font-size: 16px;">🎯</span> Goals
+        </button>
+        <button class="nav-item" data-tab="wishlist" onclick="window.switchTab('wishlist')">
+          <span style="font-size: 16px;">💡</span> Wishlist
+        </button>
+        <button class="nav-item" data-tab="reports" onclick="window.switchTab('reports')">
+          <span style="font-size: 16px;">📊</span> Reports
+        </button>
+        <button class="nav-item" data-tab="settings" onclick="window.switchTab('settings')">
+          <span style="font-size: 16px;">⚙️</span> Settings
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Bar -->
+      <header class="top-bar">
+        <div class="user-greeting">
+          <h1>Welcome back, Alex 👋</h1>
+          <p>Here is your daily financial status</p>
+        </div>
+
+        <div class="top-actions">
+          <select id="top-currency-select" class="form-select" style="width: auto; height: 40px; padding: 4px 10px; font-weight: 600; cursor: pointer; border-radius: var(--radius-md);" onchange="window.changeCurrency(this.value)" title="Change Currency">
+            <option value="$">$ USD ($)</option>
+            <option value="€">€ EUR (€)</option>
+            <option value="£">£ GBP (£)</option>
+            <option value="₹">₹ INR (₹)</option>
+            <option value="¥">¥ JPY (¥)</option>
+            <option value="A$">A$ AUD (A$)</option>
+            <option value="C$">C$ CAD (C$)</option>
+            <option value="₱">₱ PHP (₱)</option>
+            <option value="R$">R$ BRL (R$)</option>
+            <option value="Fr">Fr CHF (Fr)</option>
+            <option value="AED">AED (AED)</option>
+            <option value="RM">RM MYR (RM)</option>
+            <option value="S$">S$ SGD (S$)</option>
+          </select>
+          <button id="theme-toggle-btn" class="btn-icon" onclick="window.toggleTheme()" title="Toggle Light/Dark Theme">🌙</button>
+          <button class="btn-primary" onclick="window.openQuickAddModal()" title="Fast Log (< 10 seconds)">+ Add Entry</button>
+        </div>
+      </header>
+
+      <!-- Dynamic View Container -->
+      <div id="page-content" class="page-container">
+        <!-- Rendered by modules -->
+      </div>
+    </main>
+
+    <!-- Floating AI Money Companion FAB -->
+    <button class="ai-fab" onclick="window.openAIDrawer()" title="Ask Money Companion AI">
+      ✨
+    </button>
+
+    <!-- AI Money Companion Drawer -->
+    <div id="ai-drawer" class="ai-drawer">
+      <div class="ai-drawer-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <img src="assets/ai_companion_avatar.jpg" alt="AI Companion" class="ai-avatar">
+          <div>
+            <h3 style="font-size: 16px; font-weight: 700;">Money Companion AI</h3>
+            <span style="font-size: 12px; color: var(--accent-emerald); font-weight: 600;">● Ready to help</span>
+          </div>
+        </div>
+        <button onclick="window.closeAIDrawer()" class="btn-icon">✕</button>
+      </div>
+
+      <div id="ai-chat-body" class="ai-chat-body">
+        <div class="chat-bubble ai">
+          Hi Alex! 👋 I'm your Personal Money Companion. Select any quick question below or ask me about your budget!
+        </div>
+
+        <!-- Quick AI Prompt Cards -->
+        <div class="quick-prompts-container">
+          <div class="prompt-card" onclick="window.sendAIQuery('Can I buy this?')">
+            <span>🤔 Can I buy this item?</span>
+            <span style="color: var(--accent-violet);">→</span>
+          </div>
+          <div class="prompt-card" onclick="window.sendAIQuery('How much budget is left?')">
+            <span>⚖️ How much budget is left?</span>
+            <span style="color: var(--accent-violet);">→</span>
+          </div>
+          <div class="prompt-card" onclick="window.sendAIQuery('How much have I spent this month?')">
+            <span>💸 How much have I spent this month?</span>
+            <span style="color: var(--accent-violet);">→</span>
+          </div>
+          <div class="prompt-card" onclick="window.sendAIQuery('What category am I spending the most on?')">
+            <span>🏷️ What category am I spending the most on?</span>
+            <span style="color: var(--accent-violet);">→</span>
+          </div>
+          <div class="prompt-card" onclick="window.sendAIQuery('How much should I save this month?')">
+            <span>🎯 How much should I save this month?</span>
+            <span style="color: var(--accent-violet);">→</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Add Modal (< 10-Second Entry System) -->
+    <div id="quick-add-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">⚡ Fast Expense Entry (< 10s)</h3>
+          <button onclick="window.closeQuickAddModal()" class="btn-icon">✕</button>
+        </div>
+
+        <form onsubmit="window.handleQuickAddSubmit(event)">
+          <div class="form-group">
+            <label class="form-label">Amount</label>
+            <div class="amount-input-wrapper">
+              <span id="qa-amount-currency" class="amount-currency">$</span>
+              <input type="number" step="0.01" id="qa-amount" placeholder="0.00" class="form-input" required autofocus>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Merchant / Description (Optional)</label>
+            <input type="text" id="qa-merchant" placeholder="e.g. Starbuck, Chipotle, Target" class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Category Tag</label>
+            <input type="hidden" id="qa-selected-category" value="Dining">
+            <div class="category-picker-grid">
+              <div class="cat-btn selected" onclick="window.selectQACategory(this, 'Dining')"><span>☕</span> Dining</div>
+              <div class="cat-btn" onclick="window.selectQACategory(this, 'Shopping')"><span>🛒</span> Shopping</div>
+              <div class="cat-btn" onclick="window.selectQACategory(this, 'Transport')"><span>🚗</span> Transport</div>
+              <div class="cat-btn" onclick="window.selectQACategory(this, 'Utilities')"><span>⚡</span> Bills</div>
+              <div class="cat-btn" onclick="window.selectQACategory(this, 'Entertainment')"><span>🎬</span> Fun</div>
+              <div class="cat-btn" onclick="window.selectQACategory(this, 'Health')"><span>💊</span> Health</div>
+              <div class="cat-btn" onclick="window.selectQACategory(this, 'Rent')"><span>🏠</span> Rent</div>
+              <div class="cat-btn" onclick="window.selectQACategory(this, 'Misc')"><span>📦</span> Misc</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Payment Method</label>
+            <select id="qa-payment-method" class="form-select">
+              <option value="Card">💳 Credit / Debit Card</option>
+              <option value="UPI">📱 UPI / Contactless Pay</option>
+              <option value="Cash">💵 Cash</option>
+              <option value="Bank Transfer">🏦 Bank Transfer</option>
+            </select>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+            <button type="button" onclick="window.closeQuickAddModal()" class="btn-primary" style="background: var(--bg-surface-elevated); color: var(--text-primary);">Cancel</button>
+            <button type="submit" class="btn-primary">Save Expense ✨</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Income Modal -->
+    <div id="income-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">💵 Add Income Stream</h3>
+          <button onclick="window.closeIncomeModal()" class="btn-icon">✕</button>
+        </div>
+        <form onsubmit="window.handleIncomeSubmit(event)">
+          <div class="form-group">
+            <label class="form-label">Income Amount</label>
+            <input type="number" step="0.01" id="inc-amount" placeholder="0.00" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Source Name</label>
+            <input type="text" id="inc-source" placeholder="e.g. Salary, Freelance Bonus, Gift" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select id="inc-category" class="form-select">
+              <option value="Primary">Primary Paycheck</option>
+              <option value="Bonus">Bonus / Side Hustle</option>
+              <option value="Gift">Gift / Refund</option>
+              <option value="Investment">Investment Return</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Recurrence</label>
+            <select id="inc-recurrence" class="form-select">
+              <option value="monthly">Monthly Recurring</option>
+              <option value="one_time">One-time Deposit</option>
+              <option value="biweekly">Bi-weekly</option>
+            </select>
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+            <button type="button" onclick="window.closeIncomeModal()" class="btn-primary" style="background: var(--bg-surface-elevated); color: var(--text-primary);">Cancel</button>
+            <button type="submit" class="btn-primary btn-emerald">Save Income</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Savings Modal -->
+    <div id="savings-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">🏦 Quick Savings Deposit</h3>
+          <button onclick="window.closeSavingsModal()" class="btn-icon">✕</button>
+        </div>
+        <form onsubmit="window.handleSavingsSubmit(event)">
+          <div class="form-group">
+            <label class="form-label">Deposit Amount</label>
+            <input type="number" step="0.01" id="sav-amount" placeholder="0.00" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Target Goal Allocation</label>
+            <select id="sav-goal-id" class="form-select">
+              <option value="g_1">Emergency Fund</option>
+              <option value="g_2">MacBook Pro M3</option>
+              <option value="g_3">Japan Autumn Trip</option>
+            </select>
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+            <button type="button" onclick="window.closeSavingsModal()" class="btn-primary" style="background: var(--bg-surface-elevated); color: var(--text-primary);">Cancel</button>
+            <button type="submit" class="btn-primary btn-emerald">Deposit Funds</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Wishlist Modal -->
+    <div id="wishlist-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">💡 Add Wishlist Item</h3>
+          <button onclick="window.closeWishlistModal()" class="btn-icon">✕</button>
+        </div>
+        <form onsubmit="window.handleWishlistSubmit(event)">
+          <div class="form-group">
+            <label class="form-label">Item Name</label>
+            <input type="text" id="wl-item-name" placeholder="e.g. Smart Watch" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Price</label>
+            <input type="number" step="0.01" id="wl-item-price" placeholder="0.00" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select id="wl-category" class="form-select">
+              <option value="Electronics">Electronics</option>
+              <option value="Furniture">Furniture & Home</option>
+              <option value="Clothing">Clothing & Fashion</option>
+              <option value="Travel">Travel & Experiences</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Urgency</label>
+            <select id="wl-urgency" class="form-select">
+              <option value="Want">Want (Desirable)</option>
+              <option value="Need">Need (Essential)</option>
+              <option value="Impulse">Impulse (Spontaneous)</option>
+            </select>
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+            <button type="button" onclick="window.closeWishlistModal()" class="btn-primary" style="background: var(--bg-surface-elevated); color: var(--text-primary);">Cancel</button>
+            <button type="submit" class="btn-primary">Save to Wishlist</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed:', err));
+    }
+  </script>
+</body>
+</html>
