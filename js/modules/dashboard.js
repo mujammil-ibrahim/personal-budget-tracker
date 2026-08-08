@@ -92,10 +92,16 @@ export function renderDashboard() {
       <div class="budget-meter-card">
         <div class="meter-header">
           <div>
-            <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">Overall Budget Health</h3>
-            <p style="font-size: 13px; color: var(--text-secondary);">You've used ${budgetPct}% of your allocated monthly budget</p>
+            <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">Overall Budget & Cash Health</h3>
+            <p style="font-size: 13px; color: var(--text-secondary);">
+              Spent ${metrics.currency}${metrics.monthExpenses.toLocaleString('en-US', { minimumFractionDigits: 2 })} of ${metrics.totalAllocatedBudget > 0 ? `${metrics.currency}${metrics.totalAllocatedBudget.toLocaleString()} allocated budget` : `${metrics.currency}${metrics.monthIncome.toLocaleString()} income`}. 
+              <strong style="color: var(--accent-emerald);">Net Cash Left: ${metrics.currency}${metrics.netAvailableBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</strong>
+            </p>
           </div>
-          <div style="font-size: 18px; font-weight: 800; color: var(--text-primary);">${metrics.currency}${metrics.monthExpenses.toLocaleString('en-US', { minimumFractionDigits: 2 })} / ${metrics.currency}${metrics.totalAllocatedBudget.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+          <div style="text-align: right;">
+            <div style="font-size: 18px; font-weight: 800; color: var(--text-primary);">${metrics.currency}${metrics.monthExpenses.toLocaleString('en-US', { minimumFractionDigits: 2 })} / ${metrics.currency}${(metrics.totalAllocatedBudget > 0 ? metrics.totalAllocatedBudget : metrics.monthIncome).toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+            <div style="font-size: 12px; color: var(--accent-emerald); font-weight: 700;">${metrics.currency}${metrics.netAvailableBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })} Available</div>
+          </div>
         </div>
         <div class="progress-track">
           <div class="progress-fill ${progressColorClass}" style="width: ${budgetPct}%;"></div>
