@@ -297,13 +297,56 @@ window.handleWishlistSubmit = function(e) {
   e.preventDefault();
   const item_name = document.getElementById('wl-item-name').value.trim();
   const price = parseFloat(document.getElementById('wl-item-price').value);
+  const buy_timing = document.getElementById('wl-buy-timing') ? document.getElementById('wl-buy-timing').value : 'month';
   const category = document.getElementById('wl-category').value;
   const urgency = document.getElementById('wl-urgency').value;
 
   if (!item_name || isNaN(price)) return alert('Please enter valid item details!');
 
-  dbStore.addItem('Wishlist', { item_name, price, category, urgency, status: 'wishing' });
+  dbStore.addItem('Wishlist', { item_name, price, category, buy_timing, urgency, status: 'wishing' });
   window.closeWishlistModal();
+  window.switchTab(currentTab);
+};
+
+window.markItemAsPurchased = function(itemId, itemName, defaultPrice) {
+  const method = prompt(`Marking "${itemName}" as Purchased!\nSelect Payment Method:\n1 = Card\n2 = UPI\n3 = Cash\n4 = Bank Transfer`, '1');
+  if (method === null) return; // User cancelled
+
+  let paymentMethod = 'Card';
+  if (method === '2') paymentMethod = 'UPI';
+  else if (method === '3') paymentMethod = 'Cash';
+  else if (method === '4') paymentMethod = 'Bank Transfer';
+
+  dbStore.markWishlistPurchased(itemId, paymentMethod, defaultPrice);
+  alert(`🎉 "${itemName}" marked as Purchased! It has been automatically added to your Expenses table.`);
+  window.switchTab(currentTab);
+};
+
+window.saveGroceryNotes = function() {
+  const text = document.getElementById('grocery-notes-input')?.value || '';
+  const settings = dbStore.getTable('Settings')[0];
+  if (settings) {
+    dbStore.updateItem('Settings', settings.id, { grocery_notes: text });
+  }
+  alert('Grocery & Household notes saved!');
+};
+
+window.logGroceryAsExpense = function() {
+  const amountStr = prompt('Enter Total Amount spent on Groceries:', '45.00');
+  if (!amountStr) return;
+  const amount = parseFloat(amountStr);
+  if (isNaN(amount) || amount <= 0) return alert('Invalid amount!');
+
+  dbStore.addItem('Expenses', {
+    amount,
+    merchant: 'Grocery Store Run',
+    category: 'Dining',
+    payment_method: 'Card',
+    date: new Date().toISOString().split('T')[0],
+    notes: document.getElementById('grocery-notes-input')?.value || 'Grocery checklist'
+  });
+
+  alert(`🛒 Grocery Expense logged successfully! Added to Expenses.`);
   window.switchTab(currentTab);
 };
 

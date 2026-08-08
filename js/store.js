@@ -267,6 +267,30 @@ class Store {
     }
   }
 
+  markWishlistPurchased(itemId, paymentMethod = 'Card', finalPrice = null) {
+    const item = this.data.Wishlist.find(w => w.id === itemId);
+    if (!item) return null;
+
+    const price = finalPrice !== null && !isNaN(parseFloat(finalPrice)) ? parseFloat(finalPrice) : parseFloat(item.price || 0);
+
+    // Update item status
+    item.status = 'purchased';
+
+    // Auto-add transaction to Expenses table
+    const newExpense = this.addItem('Expenses', {
+      amount: price,
+      merchant: item.item_name,
+      category: item.category === 'Grocery' ? 'Dining' : (item.category || 'Shopping'),
+      payment_method: paymentMethod,
+      date: new Date().toISOString().split('T')[0],
+      notes: `Auto-logged from Shopping List (${item.buy_timing || 'planned'})`
+    });
+
+    this.saveData();
+    this.recalculateBudgets();
+    return newExpense;
+  }
+
   getDashboardMetrics() {
     const curMonth = new Date().getMonth() + 1;
     const curYear = new Date().getFullYear();

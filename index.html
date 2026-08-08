@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Money Companion - Personal Budget Tracker</title>
   <meta name="description" content="A simple, lightweight, beginner-friendly personal budget tracker for daily financial clarity.">
-  <link rel="stylesheet" href="css/styles.css?v=4">
+  <link rel="stylesheet" href="css/styles.css?v=5">
   <link rel="icon" href="assets/ai_companion_avatar.jpg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#6366F1">
@@ -43,7 +43,7 @@
           <span style="font-size: 16px;">🎯</span> Goals
         </button>
         <button class="nav-item" data-tab="wishlist" onclick="window.switchTab('wishlist')">
-          <span style="font-size: 16px;">💡</span> Wishlist
+          <span style="font-size: 16px;">🛒</span> Shopping List
         </button>
         <button class="nav-item" data-tab="reports" onclick="window.switchTab('reports')">
           <span style="font-size: 16px;">📊</span> Reports
@@ -341,29 +341,40 @@
       </div>
     </div>
 
-    <!-- Wishlist Modal -->
+    <!-- Wishlist / Planned Shopping Item Modal -->
     <div id="wishlist-modal" class="modal-overlay">
       <div class="modal-content">
         <div class="modal-header">
-          <h3 class="modal-title">💡 Add Wishlist Item</h3>
+          <h3 class="modal-title">🛒 Add Planned Shopping Item</h3>
           <button onclick="window.closeWishlistModal()" class="btn-icon">✕</button>
         </div>
         <form onsubmit="window.handleWishlistSubmit(event)">
           <div class="form-group">
             <label class="form-label">Item Name</label>
-            <input type="text" id="wl-item-name" placeholder="e.g. Smart Watch" class="form-input" required>
+            <input type="text" id="wl-item-name" placeholder="e.g. Ergonomic Chair, Winter Jacket, Grocery Run" class="form-input" required>
           </div>
           <div class="form-group">
-            <label class="form-label">Price</label>
+            <label class="form-label">Estimated Price</label>
             <input type="number" step="0.01" id="wl-item-price" placeholder="0.00" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">When do you plan to buy?</label>
+            <select id="wl-buy-timing" class="form-select">
+              <option value="now">⚡ Buy Today / Right Now</option>
+              <option value="week">📅 This Week</option>
+              <option value="month" selected>📆 This Month</option>
+              <option value="year">🗓️ This Year</option>
+            </select>
           </div>
           <div class="form-group">
             <label class="form-label">Category</label>
             <select id="wl-category" class="form-select">
-              <option value="Electronics">Electronics</option>
-              <option value="Furniture">Furniture & Home</option>
-              <option value="Clothing">Clothing & Fashion</option>
-              <option value="Travel">Travel & Experiences</option>
+              <option value="Grocery">🛒 Grocery & Household</option>
+              <option value="Shopping">👕 Clothes & Personal</option>
+              <option value="Electronics">📱 Tech & Electronics</option>
+              <option value="Furniture">🏠 Home & Furniture</option>
+              <option value="Travel">✈️ Travel & Experiences</option>
+              <option value="Misc">📦 Miscellaneous</option>
             </select>
           </div>
           <div class="form-group">
@@ -376,7 +387,7 @@
           </div>
           <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
             <button type="button" onclick="window.closeWishlistModal()" class="btn-primary" style="background: var(--bg-surface-elevated); color: var(--text-primary);">Cancel</button>
-            <button type="submit" class="btn-primary">Save to Wishlist</button>
+            <button type="submit" class="btn-primary">Save Planned Item ✨</button>
           </div>
         </form>
       </div>
@@ -384,10 +395,10 @@
 
   </div>
 
-  <script type="module" src="js/app.js?v=4"></script>
+  <script type="module" src="js/app.js?v=5"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js?v=4').then(reg => reg.update()).catch(err => console.log('SW registration failed:', err));
+      navigator.serviceWorker.register('sw.js?v=5').then(reg => reg.update()).catch(err => console.log('SW registration failed:', err));
     }
   </script>
 </body>
