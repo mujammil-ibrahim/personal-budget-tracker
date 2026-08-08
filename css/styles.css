@@ -885,7 +885,9 @@ body {
   }
 }
 
-body.tab-landing .user-greeting {
+body.tab-landing .app-sidebar,
+body.tab-landing .top-bar,
+body.tab-landing .mobile-bottom-nav {
   display: none !important;
 }
 
