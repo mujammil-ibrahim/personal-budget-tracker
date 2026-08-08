@@ -15,6 +15,7 @@ import { renderWishlist } from './modules/wishlist.js';
 import { renderReports } from './modules/reports.js';
 import { renderSettings } from './modules/settings.js';
 import { renderLandingPage } from './modules/landing.js';
+import { renderAbout } from './modules/about.js';
 
 // State
 let currentTab = 'landing';
@@ -60,6 +61,7 @@ window.switchTab = function(tabName) {
     case 'goals': container.innerHTML = renderGoals(); break;
     case 'wishlist': container.innerHTML = renderWishlist(); break;
     case 'reports': container.innerHTML = renderReports(); break;
+    case 'about': container.innerHTML = renderAbout(); break;
     case 'settings': container.innerHTML = renderSettings(); break;
     default: container.innerHTML = renderDashboard();
   }
