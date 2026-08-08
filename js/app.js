@@ -25,6 +25,15 @@ window.switchTab = function(tabName) {
   currentTab = tabName || 'dashboard';
   document.body.className = 'tab-' + currentTab;
 
+  // Persist active tab so page refresh preserves current view
+  if (dbStore.isLoggedIn() && currentTab !== 'landing') {
+    localStorage.setItem('mc_last_active_tab', currentTab);
+    window.location.hash = currentTab;
+  } else if (currentTab === 'landing') {
+    localStorage.removeItem('mc_last_active_tab');
+    if (window.location.hash) history.replaceState(null, null, ' ');
+  }
+
   // Sync Currency Dropdown
   const settings = dbStore.getTable('Settings')[0];
   const topCurrencySelect = document.getElementById('top-currency-select');
@@ -60,6 +69,8 @@ window.switchTab = function(tabName) {
 
 window.handleLogout = function() {
   dbStore.logout();
+  localStorage.removeItem('mc_last_active_tab');
+  if (window.location.hash) history.replaceState(null, null, ' ');
   alert('🚪 Logged out successfully!');
   window.switchTab('landing');
 };
@@ -903,7 +914,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (dbStore.isLoggedIn()) {
-    window.switchTab('dashboard');
+    const hashTab = window.location.hash ? window.location.hash.replace('#', '') : '';
+    const savedTab = localStorage.getItem('mc_last_active_tab') || 'dashboard';
+    const validTabs = ['dashboard', 'income', 'expenses', 'budget', 'savings', 'goals', 'wishlist', 'reports', 'about', 'settings'];
+    const initialTab = validTabs.includes(hashTab) ? hashTab : (validTabs.includes(savedTab) ? savedTab : 'dashboard');
+
+    window.switchTab(initialTab);
   } else {
     window.switchTab('landing');
   }
