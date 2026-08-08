@@ -522,19 +522,31 @@ class Store {
 
     const monthExpenses = monthExpenseRecords.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
 
+    const userSavings = this.getTable('Savings');
+    const monthSavingsRecords = userSavings.filter(s => {
+      const d = this.parseLocalDate(s.deposit_date);
+      return (d.getMonth() + 1) === curMonth && d.getFullYear() === curYear;
+    });
+
+    const monthSavings = monthSavingsRecords.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+    const totalSavings = userSavings.reduce((sum, s) => sum + parseFloat(s.amount || 0), 0);
+
     const userBudgets = this.getTable('Budgets');
     const monthBudgetRecords = userBudgets.filter(b => b.month === curMonth && b.year === curYear);
     const totalAllocatedBudget = monthBudgetRecords.reduce((sum, b) => sum + parseFloat(b.allocated_amount || 0), 0);
 
-    const unspentPool = totalAllocatedBudget > 0 ? (totalAllocatedBudget - monthExpenses) : (monthIncome - monthExpenses);
+    // Exact User Formula: Net Available Balance = Income - Expenses - Savings
+    const netAvailableBalance = monthIncome - monthExpenses - monthSavings;
+
+    const unspentPool = totalAllocatedBudget > 0 
+      ? (totalAllocatedBudget - monthExpenses - monthSavings)
+      : netAvailableBalance;
+
     const remainingBudget = Math.max(0, unspentPool);
 
     const totalDaysInMonth = new Date(curYear, curMonth, 0).getDate();
     const remainingDays = Math.max(1, totalDaysInMonth - today.getDate() + 1);
     const safeDailyLimit = Math.max(0, unspentPool / remainingDays).toFixed(2);
-
-    const userSavings = this.getTable('Savings');
-    const totalSavings = userSavings.reduce((sum, s) => sum + parseFloat(s.amount || 0), 0);
 
     const settings = (this.data.Settings && this.data.Settings[0]) || { currency_symbol: '$' };
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -543,11 +555,13 @@ class Store {
     return {
       monthIncome,
       monthExpenses,
+      monthSavings,
+      totalSavings,
+      netAvailableBalance,
       totalAllocatedBudget,
       remainingBudget,
       safeDailyLimit: parseFloat(safeDailyLimit),
       remainingDays,
-      totalSavings,
       currency: settings.currency_symbol || '$',
       fixedSalary: fixedSalaryAmount,
       currentMonthName,

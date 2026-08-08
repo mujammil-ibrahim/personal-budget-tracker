@@ -90,38 +90,46 @@ export function renderReports() {
           </div>
         </div>
 
-        <!-- Income vs Expense Bar Comparison -->
+        <!-- Income vs Expense vs Savings Bar Comparison -->
         <div class="stat-card">
-          <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px;">Cash Flow Balance</h3>
-          <div style="display: flex; flex-direction: column; gap: 20px; padding: 10px 0;">
+          <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px;">Cash Flow & Savings Balance</h3>
+          <div style="display: flex; flex-direction: column; gap: 16px; padding: 4px 0;">
             <div>
-              <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 6px;">
-                <span style="color: var(--accent-emerald);">Total Income</span>
-                <span>${currency}${metrics.monthIncome.toLocaleString()}</span>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 4px;">
+                <span style="color: var(--accent-emerald);">Total Monthly Income</span>
+                <span>${currency}${metrics.monthIncome.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
               </div>
-              <div class="progress-track" style="height: 14px;">
+              <div class="progress-track" style="height: 12px;">
                 <div class="progress-fill green" style="width: 100%;"></div>
               </div>
             </div>
 
             <div>
-              <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 6px;">
+              <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 4px;">
                 <span style="color: var(--accent-rose);">Total Expenses</span>
-                <span>${currency}${metrics.monthExpenses.toLocaleString()}</span>
+                <span>${currency}${metrics.monthExpenses.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
               </div>
-              <div class="progress-track" style="height: 14px;">
+              <div class="progress-track" style="height: 12px;">
                 <div class="progress-fill rose" style="width: ${metrics.monthIncome > 0 ? Math.min(100, (metrics.monthExpenses / metrics.monthIncome) * 100) : 0}%;"></div>
               </div>
             </div>
 
             <div>
-              <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 6px;">
-                <span style="color: var(--accent-indigo);">Savings & Surplus</span>
-                <span>${currency}${Math.max(0, metrics.monthIncome - metrics.monthExpenses).toLocaleString()}</span>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 4px;">
+                <span style="color: var(--accent-violet);">Savings & Goal Deposits</span>
+                <span>${currency}${metrics.monthSavings.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
               </div>
-              <div class="progress-track" style="height: 14px;">
-                <div class="progress-fill indigo" style="width: ${metrics.monthIncome > 0 ? Math.min(100, ((metrics.monthIncome - metrics.monthExpenses) / metrics.monthIncome) * 100) : 0}%;"></div>
+              <div class="progress-track" style="height: 12px;">
+                <div class="progress-fill violet" style="width: ${metrics.monthIncome > 0 ? Math.min(100, (metrics.monthSavings / metrics.monthIncome) * 100) : 0}%;"></div>
               </div>
+            </div>
+
+            <div style="padding-top: 10px; border-top: 1px solid var(--border-color);">
+              <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 800;">
+                <span style="color: var(--accent-emerald);">Net Available Cash Balance</span>
+                <span style="color: var(--accent-emerald);">${currency}${metrics.netAvailableBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+              </div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Formula: Income (${currency}${metrics.monthIncome.toLocaleString()}) - Expenses (${currency}${metrics.monthExpenses.toLocaleString()}) - Savings (${currency}${metrics.monthSavings.toLocaleString()})</div>
             </div>
           </div>
         </div>

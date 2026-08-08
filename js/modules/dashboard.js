@@ -50,19 +50,19 @@ export function renderDashboard() {
       </div>
 
       <!-- Stat Cards Grid -->
-      <div class="card-grid card-grid-4">
+      <div class="card-grid card-grid-4" style="margin-bottom: 24px;">
         <div class="stat-card">
           <div class="stat-card-header">
             <span class="stat-card-title">Monthly Income</span>
             <div class="stat-icon emerald">💵</div>
           </div>
           <div class="stat-value">${metrics.currency}${metrics.monthIncome.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
-          <div class="stat-subtext"><span class="trend-up">↑ Salary & Extra</span> this month</div>
+          <div class="stat-subtext"><span class="trend-up">↑ Total paycheck & extra</span></div>
         </div>
 
         <div class="stat-card">
           <div class="stat-card-header">
-            <span class="stat-card-title">Monthly Spent</span>
+            <span class="stat-card-title">Monthly Expenses</span>
             <div class="stat-icon rose">💸</div>
           </div>
           <div class="stat-value">${metrics.currency}${metrics.monthExpenses.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
@@ -71,20 +71,20 @@ export function renderDashboard() {
 
         <div class="stat-card">
           <div class="stat-card-header">
-            <span class="stat-card-title">Budget Remaining</span>
-            <div class="stat-icon indigo">⚖️</div>
+            <span class="stat-card-title">Savings & Goal Fund</span>
+            <div class="stat-icon violet">🏦</div>
           </div>
-          <div class="stat-value">${metrics.currency}${metrics.remainingBudget.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
-          <div class="stat-subtext">${100 - budgetPct}% of budget remaining</div>
+          <div class="stat-value" style="color: var(--accent-violet);">${metrics.currency}${metrics.monthSavings.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+          <div class="stat-subtext">Deducted into savings</div>
         </div>
 
         <div class="stat-card" style="border: 2px solid var(--accent-emerald);">
           <div class="stat-card-header">
-            <span class="stat-card-title" style="color: var(--accent-emerald);">Daily Limit</span>
+            <span class="stat-card-title" style="color: var(--accent-emerald);">Net Available Cash</span>
             <div class="stat-icon emerald">🎯</div>
           </div>
-          <div class="stat-value" style="color: var(--accent-emerald);">${metrics.currency}${metrics.safeDailyLimit}</div>
-          <div class="stat-subtext">Safe allowance for ${metrics.remainingDays} days</div>
+          <div class="stat-value" style="color: var(--accent-emerald);">${metrics.currency}${metrics.netAvailableBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+          <div class="stat-subtext">Income - Expenses - Savings</div>
         </div>
       </div>
 
