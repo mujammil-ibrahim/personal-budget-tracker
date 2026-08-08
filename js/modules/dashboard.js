@@ -18,8 +18,17 @@ export function renderDashboard() {
   if (budgetPct >= 90) progressColorClass = 'rose';
   else if (budgetPct >= 70) progressColorClass = 'amber';
 
+  const currentUser = dbStore.getCurrentUser();
+  const userName = currentUser ? currentUser.name : 'Financial Explorer';
+
   return `
     <div class="page-view animate-fade-in">
+      <!-- PERSONALIZED DASHBOARD GREETING -->
+      <div style="margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+        <h1 style="font-size: 24px; font-weight: 800; color: var(--text-primary); margin-bottom: 4px;">Welcome back, ${userName} 👋</h1>
+        <p style="font-size: 13px; color: var(--text-secondary);">Here is your live daily financial status for ${metrics.currentMonthName} ${metrics.currentYear}</p>
+      </div>
+
       <!-- AI Insight Banner with Inline Chat Bar -->
       <div style="background: var(--accent-indigo-light); border: 1px solid var(--accent-indigo); border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 24px;">
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 12px;">

@@ -59,7 +59,18 @@ export function renderSettings() {
 
           <div style="display: flex; gap: 12px; margin-top: 24px;">
             <button type="submit" class="btn-primary">Save Settings</button>
-            <button type="button" onclick="dbStore.resetToDefaults()" class="btn-primary" style="background: var(--accent-rose);">Reset All Sample Data</button>
+            <button type="button" onclick="dbStore.resetToDefaults()" class="btn-primary" style="background: var(--bg-surface-elevated); color: var(--accent-rose); border: 1px solid var(--border-color);">Reset Sample Data</button>
+          </div>
+
+          <!-- Account Session & Log Out Section -->
+          <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border-color);">
+            <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 8px; color: var(--accent-rose);">🚪 Account Session</h3>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+              Currently logged in as <strong>${dbStore.getCurrentUser() ? dbStore.getCurrentUser().name : 'Active User'}</strong> (${dbStore.getCurrentUser() ? dbStore.getCurrentUser().email : 'demo@example.com'}).
+            </p>
+            <button type="button" onclick="window.handleLogout()" class="btn-primary" style="background: rgba(244, 63, 94, 0.15); border: 1px solid var(--accent-rose); color: var(--accent-rose); width: 100%; height: 44px; font-weight: 700; font-size: 14px;">
+              🚪 Log Out of Account
+            </button>
           </div>
         </form>
       </div>
