@@ -40,51 +40,54 @@ export function renderWishlist() {
       </div>
 
       <!-- Saved Wishlist Items Table -->
-      <div class="data-table-container">
-        <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-color);">
+      <div class="card-table-wrapper">
+        <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
           <h3 style="font-size: 16px; font-weight: 700;">Saved Wishlist Items</h3>
+          <span style="font-size: 11px; color: var(--accent-indigo); font-weight: 600;">(↔ Swipe table)</span>
         </div>
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Item Name</th>
-              <th>Category</th>
-              <th>Urgency</th>
-              <th>Decision Notes</th>
-              <th style="text-align: right;">Price</th>
-              <th style="text-align: center;">Evaluate / Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${wishlist.length === 0 ? `
-              <tr><td colspan="6" class="empty-state">No wishlist items added yet. Save something you're eyeing!</td></tr>
-            ` : wishlist.map(item => {
-              const result = AIEngine.processQuery('can i buy this', { type: 'can_i_buy', price: item.price, itemName: item.item_name });
-              
-              let urgencyBadge = '<span class="badge badge-indigo">Want</span>';
-              if (item.urgency === 'Need') urgencyBadge = '<span class="badge badge-emerald">Need</span>';
-              else if (item.urgency === 'Impulse') urgencyBadge = '<span class="badge badge-rose">Impulse</span>';
+        <div class="table-scroll-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Item Name</th>
+                <th>Category</th>
+                <th>Priority</th>
+                <th>Decision Notes</th>
+                <th style="text-align: right;">Price</th>
+                <th style="text-align: center;">Evaluate / Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${wishlist.length === 0 ? `
+                <tr><td colspan="6" class="empty-state">No wishlist items added yet. Save something you're eyeing!</td></tr>
+              ` : wishlist.map(item => {
+                const result = AIEngine.processQuery('can i buy this', { type: 'can_i_buy', price: item.price, itemName: item.item_name });
+                
+                let urgencyBadge = '<span class="badge badge-indigo">Medium</span>';
+                if (item.urgency === 'High' || item.urgency === 'Need') urgencyBadge = '<span class="badge badge-rose">High</span>';
+                else if (item.urgency === 'Low' || item.urgency === 'Impulse') urgencyBadge = '<span class="badge badge-emerald">Low</span>';
 
-              let statusBadge = '<span class="badge badge-emerald">Safe to Buy</span>';
-              if (result.status === 'amber') statusBadge = '<span class="badge badge-amber">Borderline</span>';
-              else if (result.status === 'rose') statusBadge = '<span class="badge badge-rose">Over Budget</span>';
+                let statusBadge = '<span class="badge badge-emerald">Safe to Buy</span>';
+                if (result.status === 'amber') statusBadge = '<span class="badge badge-amber">Borderline</span>';
+                else if (result.status === 'rose') statusBadge = '<span class="badge badge-rose">Over Budget</span>';
 
-              return `
-                <tr>
-                  <td style="font-weight: 600;">${item.item_name}</td>
-                  <td><span class="badge badge-indigo">${item.category}</span></td>
-                  <td>${urgencyBadge}</td>
-                  <td style="color: var(--text-secondary); font-size: 13px;">${item.decision_notes || '-'}</td>
-                  <td style="text-align: right; font-weight: 700;">${metrics.currency}${parseFloat(item.price).toFixed(2)}</td>
-                  <td style="text-align: center; display: flex; gap: 8px; justify-content: center;">
-                    ${statusBadge}
-                    <button onclick="window.deleteRecord('Wishlist', '${item.id}')" style="background: none; border: none; color: var(--accent-rose); cursor: pointer; font-size: 14px;">🗑️</button>
-                  </td>
-                </tr>
-              `;
-            }).join('')}
-          </tbody>
-        </table>
+                return `
+                  <tr>
+                    <td style="font-weight: 600;">${item.item_name}</td>
+                    <td><span class="badge badge-indigo">${item.category}</span></td>
+                    <td>${urgencyBadge}</td>
+                    <td style="color: var(--text-secondary); font-size: 13px;">${item.decision_notes || '-'}</td>
+                    <td style="text-align: right; font-weight: 700;">${metrics.currency}${parseFloat(item.price).toFixed(2)}</td>
+                    <td style="text-align: center; display: flex; gap: 8px; justify-content: center;">
+                      ${statusBadge}
+                      <button onclick="window.deleteRecord('Wishlist', '${item.id}')" style="background: none; border: none; color: var(--accent-rose); cursor: pointer; font-size: 14px;">🗑️</button>
+                    </td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   `;

@@ -44,51 +44,56 @@ export function renderExpenses() {
       </div>
 
       <!-- Filter Controls & Data Table -->
-      <div class="data-table-container">
-        <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; gap: 12px; flex-wrap: wrap;">
-          <input type="text" id="expense-search" placeholder="Search merchant or notes..." class="form-input" style="max-width: 280px; height: 38px; font-size: 13px;" onkeyup="window.filterExpenses()">
-          <select id="expense-cat-filter" class="form-select" style="max-width: 200px; height: 38px; font-size: 13px;" onchange="window.filterExpenses()">
-            <option value="">All Categories</option>
-            <option value="Dining">Dining & Food</option>
-            <option value="Rent">Rent & Housing</option>
-            <option value="Utilities">Utilities & Bills</option>
-            <option value="Shopping">Shopping & Clothes</option>
-            <option value="Transport">Transport & Fuel</option>
-            <option value="Entertainment">Entertainment</option>
-            <option value="Health">Health & Fitness</option>
-          </select>
+      <div class="card-table-wrapper">
+        <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; gap: 12px; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+          <div style="display: flex; gap: 12px; flex-wrap: wrap; flex: 1;">
+            <input type="text" id="expense-search" placeholder="Search merchant..." class="form-input" style="max-width: 220px; height: 38px; font-size: 13px;" onkeyup="window.filterExpenses()">
+            <select id="expense-cat-filter" class="form-select" style="max-width: 180px; height: 38px; font-size: 13px;" onchange="window.filterExpenses()">
+              <option value="">All Categories</option>
+              <option value="Dining">Dining & Food</option>
+              <option value="Rent">Rent & Housing</option>
+              <option value="Utilities">Utilities & Bills</option>
+              <option value="Shopping">Shopping & Clothes</option>
+              <option value="Transport">Transport & Fuel</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Health">Health & Fitness</option>
+            </select>
+          </div>
+          <span style="font-size: 11px; color: var(--accent-indigo); font-weight: 600;">(↔ Swipe table)</span>
         </div>
 
-        <table class="data-table" id="expenses-table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Merchant / Item</th>
-              <th>Category</th>
-              <th>Payment Method</th>
-              <th>Notes</th>
-              <th style="text-align: right;">Amount</th>
-              <th style="text-align: center;">Action</th>
-            </tr>
-          </thead>
-          <tbody id="expenses-tbody">
-            ${expenses.length === 0 ? `
-              <tr><td colspan="7" class="empty-state">No expense records found.</td></tr>
-            ` : expenses.map(exp => `
+        <div class="table-scroll-wrapper">
+          <table class="data-table" id="expenses-table">
+            <thead>
               <tr>
-                <td>${exp.date}</td>
-                <td style="font-weight: 600;">${exp.merchant || 'Expense'}</td>
-                <td><span class="badge badge-indigo">${exp.category}</span></td>
-                <td style="color: var(--text-muted);">${exp.payment_method || 'Card'}</td>
-                <td style="color: var(--text-secondary); font-size: 13px;">${exp.notes || '-'}</td>
-                <td style="text-align: right; font-weight: 700; color: var(--accent-rose);">- ${metrics.currency}${parseFloat(exp.amount).toFixed(2)}</td>
-                <td style="text-align: center;">
-                  <button onclick="window.deleteRecord('Expenses', '${exp.id}')" style="background: none; border: none; color: var(--accent-rose); cursor: pointer; font-size: 14px;">🗑️</button>
-                </td>
+                <th>Date</th>
+                <th>Merchant / Item</th>
+                <th>Category</th>
+                <th>Payment Method</th>
+                <th>Notes</th>
+                <th style="text-align: right;">Amount</th>
+                <th style="text-align: center;">Action</th>
               </tr>
-            `).join('')}
-          </tbody>
-        </table>
+            </thead>
+            <tbody id="expenses-tbody">
+              ${expenses.length === 0 ? `
+                <tr><td colspan="7" class="empty-state">No expense records found.</td></tr>
+              ` : expenses.map(exp => `
+                <tr>
+                  <td>${exp.date}</td>
+                  <td style="font-weight: 600;">${exp.merchant || 'Expense'}</td>
+                  <td><span class="badge badge-indigo">${exp.category}</span></td>
+                  <td style="color: var(--text-muted);">${exp.payment_method || 'Card'}</td>
+                  <td style="color: var(--text-secondary); font-size: 13px;">${exp.notes || '-'}</td>
+                  <td style="text-align: right; font-weight: 700; color: var(--accent-rose);">- ${metrics.currency}${parseFloat(exp.amount).toFixed(2)}</td>
+                  <td style="text-align: center;">
+                    <button onclick="window.deleteRecord('Expenses', '${exp.id}')" style="background: none; border: none; color: var(--accent-rose); cursor: pointer; font-size: 14px;">🗑️</button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   `;
