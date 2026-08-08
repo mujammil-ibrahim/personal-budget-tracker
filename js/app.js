@@ -48,6 +48,9 @@ window.switchTab = function(tabName) {
     case 'settings': container.innerHTML = renderSettings(); break;
     default: container.innerHTML = renderDashboard();
   }
+
+  updateUserHeader();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 // --- Instant Currency Changer ---
@@ -457,6 +460,115 @@ window.handleInlineAISubmit = function(e) {
   window.openAIDrawer();
   window.sendAIQuery(text);
   if (inputEl) inputEl.value = '';
+};
+
+// --- Multi-User Account Authentication & Account Switcher Engine ---
+function updateUserHeader() {
+  const user = dbStore.getCurrentUser();
+  const greetingEl = document.getElementById('top-user-greeting');
+  if (greetingEl && user) {
+    greetingEl.innerText = `Welcome back, ${user.name.split(' ')[0]} 👋`;
+  }
+}
+
+window.openAuthModal = function() {
+  document.getElementById('auth-modal').classList.add('active');
+  window.switchAuthTab('switch');
+  renderAccountList();
+};
+
+window.closeAuthModal = function() {
+  document.getElementById('auth-modal').classList.remove('active');
+};
+
+window.switchAuthTab = function(tab) {
+  ['login', 'register', 'switch'].forEach(t => {
+    const form = document.getElementById(`auth-form-${t}`);
+    const tabBtn = document.getElementById(`auth-tab-${t}`);
+    if (form) form.style.display = t === tab ? 'block' : 'none';
+    if (tabBtn) {
+      if (t === tab) {
+        tabBtn.classList.add('active');
+        tabBtn.style.background = 'var(--accent-indigo)';
+        tabBtn.style.color = '#fff';
+      } else {
+        tabBtn.classList.remove('active');
+        tabBtn.style.background = 'var(--bg-surface-elevated)';
+        tabBtn.style.color = 'var(--text-secondary)';
+      }
+    }
+  });
+
+  if (tab === 'switch') renderAccountList();
+};
+
+function renderAccountList() {
+  const container = document.getElementById('account-switcher-list');
+  if (!container) return;
+  const users = dbStore.getAllUsers();
+  const activeUser = dbStore.getCurrentUser();
+
+  container.innerHTML = users.map(u => {
+    const isActive = u.id === activeUser.id;
+    return `
+      <div onclick="window.switchAccountTo('${u.id}')" style="background: ${isActive ? 'var(--accent-indigo-light)' : 'var(--bg-surface-elevated)'}; border: 1px solid ${isActive ? 'var(--accent-indigo)' : 'var(--border-color)'}; padding: 12px 16px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-indigo), var(--accent-violet)); color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; font-size: 14px;">
+            ${u.name.charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <div style="font-size: 14px; font-weight: 700;">${u.name} ${isActive ? '🟢 Active' : ''}</div>
+            <div style="font-size: 12px; color: var(--text-muted);">${u.email}</div>
+          </div>
+        </div>
+        <button class="btn-primary" style="font-size: 11px; padding: 4px 10px; background: ${isActive ? 'var(--accent-emerald)' : 'var(--accent-indigo)'};">
+          ${isActive ? 'Selected' : 'Switch ➔'}
+        </button>
+      </div>
+    `;
+  }).join('');
+}
+
+window.switchAccountTo = function(userId) {
+  dbStore.setActiveUserId(userId);
+  updateUserHeader();
+  window.closeAuthModal();
+  alert(`✨ Switched to ${dbStore.getCurrentUser().name}'s account!`);
+  window.switchTab(currentTab);
+};
+
+window.handleLoginSubmit = function(e) {
+  e.preventDefault();
+  const email = document.getElementById('login-email').value;
+  const pass = document.getElementById('login-password').value;
+
+  const user = dbStore.login(email, pass);
+  if (user) {
+    updateUserHeader();
+    window.closeAuthModal();
+    alert(`🎉 Successfully logged in as ${user.name}!`);
+    window.switchTab(currentTab);
+  } else {
+    alert('❌ Invalid Email or Password. Try again or select from Registered Accounts!');
+  }
+};
+
+window.handleRegisterSubmit = function(e) {
+  e.preventDefault();
+  const name = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass = document.getElementById('reg-password').value;
+  const salary = document.getElementById('reg-salary').value;
+
+  const result = dbStore.register(name, email, pass, salary);
+  if (result.error) {
+    alert(`❌ ${result.error}`);
+  } else {
+    updateUserHeader();
+    window.closeAuthModal();
+    alert(`🎉 Welcome ${name}! Your new account has been created and set as active.`);
+    window.switchTab(currentTab);
+  }
 };
 
 window.handleAIChatSubmit = function(e) {

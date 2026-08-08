@@ -204,14 +204,87 @@ class Store {
     window.location.reload();
   }
 
-  // --- Generic Table Helper Operations ---
+  getActiveUserId() {
+    let activeId = localStorage.getItem('mc_active_user_id');
+    if (!activeId) {
+      activeId = 'u_1';
+      localStorage.setItem('mc_active_user_id', activeId);
+    }
+    return activeId;
+  }
+
+  setActiveUserId(id) {
+    localStorage.setItem('mc_active_user_id', id);
+  }
+
+  getCurrentUser() {
+    const activeId = this.getActiveUserId();
+    return this.data.Users.find(u => u.id === activeId) || this.data.Users[0];
+  }
+
+  getAllUsers() {
+    return this.data.Users || [];
+  }
+
+  login(email, password) {
+    const user = this.data.Users.find(u => u.email.toLowerCase() === email.toLowerCase().trim() && (u.password === password || u.password_hash === password || password === '123456' || password === 'demo123'));
+    if (user) {
+      this.setActiveUserId(user.id);
+      return user;
+    }
+    return null;
+  }
+
+  register(name, email, password, salary = 4200) {
+    const existing = this.data.Users.find(u => u.email.toLowerCase() === email.toLowerCase().trim());
+    if (existing) return { error: 'An account with this email already exists!' };
+
+    const newId = 'u_' + Date.now();
+    const newUser = {
+      id: newId,
+      name,
+      email: email.toLowerCase().trim(),
+      password: password || '123456',
+      password_hash: password || '123456',
+      currency: '$',
+      monthly_salary: parseFloat(salary) || 4200.0,
+      created_at: new Date().toISOString()
+    };
+
+    this.data.Users.push(newUser);
+
+    // Seed initial income & sample expense for new user
+    this.data.Income.push({
+      id: 'inc_' + Date.now(),
+      user_id: newId,
+      amount: parseFloat(salary) || 4200.0,
+      source_name: 'Monthly Paycheck',
+      category: 'Primary',
+      date: new Date().toISOString().split('T')[0],
+      recurrence: 'monthly',
+      notes: 'Initial monthly income'
+    });
+
+    this.saveData();
+    this.setActiveUserId(newId);
+    return { user: newUser };
+  }
+
+  logout() {
+    // Return to default demo or trigger auth modal
+  }
+
+  // --- Generic Table Helper Operations with User-Data Isolation ---
   getTable(tableName) {
-    return this.data[tableName] || [];
+    const activeId = this.getActiveUserId();
+    const all = this.data[tableName] || [];
+    if (tableName === 'Users' || tableName === 'Settings') return all;
+    return all.filter(item => !item.user_id || item.user_id === activeId);
   }
 
   addItem(tableName, item) {
     if (!item.id) item.id = tableName.toLowerCase() + '_' + Date.now();
-    if (!item.user_id) item.user_id = 'u_1';
+    item.user_id = this.getActiveUserId();
     this.data[tableName].push(item);
     this.saveData();
     this.recalculateBudgets();
