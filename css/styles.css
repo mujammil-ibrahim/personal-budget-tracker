@@ -823,3 +823,17 @@ body {
   padding: 40px 20px;
   color: var(--text-muted);
 }
+
+/* Auth Mode: Hides App Chrome (Sidebar, Top Bar, Bottom Nav, AI FAB) when Logged Out */
+body.auth-mode .sidebar,
+body.auth-mode .top-bar,
+body.auth-mode .mobile-bottom-nav,
+body.auth-mode .ai-fab {
+  display: none !important;
+}
+
+body.auth-mode .main-content {
+  margin-left: 0 !important;
+  padding: 20px 16px !important;
+  max-width: 100% !important;
+}

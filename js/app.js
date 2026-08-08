@@ -21,8 +21,21 @@ let currentTab = 'landing';
 
 // --- Tab Switcher & Navigation ---
 window.switchTab = function(tabName) {
+  const isLoggedIn = dbStore.isLoggedIn();
+
+  // If not logged in, enforce landing auth page
+  if (!isLoggedIn && tabName !== 'landing') {
+    tabName = 'landing';
+  }
+
   currentTab = tabName;
-  
+
+  if (!isLoggedIn) {
+    document.body.classList.add('auth-mode');
+  } else {
+    document.body.classList.remove('auth-mode');
+  }
+
   // Sync Currency Dropdown
   const settings = dbStore.getTable('Settings')[0];
   const topCurrencySelect = document.getElementById('top-currency-select');
@@ -51,8 +64,14 @@ window.switchTab = function(tabName) {
     default: container.innerHTML = renderDashboard();
   }
 
-  updateUserHeader();
+  if (isLoggedIn) updateUserHeader();
   window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+window.handleLogout = function() {
+  dbStore.logout();
+  alert('🚪 Logged out successfully!');
+  window.switchTab('landing');
 };
 
 // --- Instant Currency Changer ---

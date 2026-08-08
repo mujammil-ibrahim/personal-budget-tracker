@@ -11,6 +11,18 @@ export function renderLandingPage() {
   return `
     <div class="page-view animate-fade-in" style="max-width: 1100px; margin: 0 auto; padding-bottom: 60px;">
       
+      <!-- CLEAN LANDING PAGE HEADER -->
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 0; margin-bottom: 24px; border-bottom: 1px solid var(--border-color);">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 38px; height: 38px; border-radius: var(--radius-md); background: linear-gradient(135deg, var(--accent-indigo), var(--accent-violet)); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff;">💎</div>
+          <span style="font-size: 18px; font-weight: 800;">Money Companion</span>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button onclick="window.scrollToAuthSection('login')" class="btn-primary" style="padding: 8px 16px; font-size: 13px;">Sign In</button>
+          <button onclick="window.scrollToAuthSection('register')" class="btn-primary btn-emerald" style="padding: 8px 16px; font-size: 13px;">Create Account</button>
+        </div>
+      </div>
+      
       <!-- HERO BANNER -->
       <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15)); border: 1px solid var(--accent-indigo); border-radius: var(--radius-xl); padding: 40px 28px; margin-bottom: 40px; text-align: center; position: relative; overflow: hidden; backdrop-filter: blur(12px);">
         <span class="badge badge-indigo" style="font-size: 13px; padding: 6px 16px; margin-bottom: 16px; display: inline-block; font-weight: 700;">

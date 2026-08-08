@@ -205,21 +205,26 @@ class Store {
   }
 
   getActiveUserId() {
-    let activeId = localStorage.getItem('mc_active_user_id');
-    if (!activeId) {
-      activeId = 'u_1';
-      localStorage.setItem('mc_active_user_id', activeId);
-    }
-    return activeId;
+    return localStorage.getItem('mc_logged_in_user_id') || localStorage.getItem('mc_active_user_id') || null;
   }
 
   setActiveUserId(id) {
-    localStorage.setItem('mc_active_user_id', id);
+    if (id) {
+      localStorage.setItem('mc_logged_in_user_id', id);
+      localStorage.setItem('mc_active_user_id', id);
+    } else {
+      localStorage.removeItem('mc_logged_in_user_id');
+    }
+  }
+
+  isLoggedIn() {
+    return Boolean(localStorage.getItem('mc_logged_in_user_id'));
   }
 
   getCurrentUser() {
     const activeId = this.getActiveUserId();
-    return this.data.Users.find(u => u.id === activeId) || this.data.Users[0];
+    if (!activeId) return null;
+    return this.data.Users.find(u => u.id === activeId) || null;
   }
 
   getAllUsers() {
@@ -271,7 +276,7 @@ class Store {
   }
 
   logout() {
-    // Return to default demo or trigger auth modal
+    localStorage.removeItem('mc_logged_in_user_id');
   }
 
   // --- Generic Table Helper Operations with User-Data Isolation ---
