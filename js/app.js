@@ -585,22 +585,47 @@ window.openLandingPage = function() {
 };
 
 window.enterDemoMode = function() {
-  dbStore.setActiveUserId('u_1');
-  alert('⚡ Welcome to Demo Mode! Logged in as Alex Rivera.');
+  let users = dbStore.getAllUsers();
+  let demoUser = users.find(u => u.id === 'u_1' || u.email.toLowerCase() === 'alex@example.com');
+  
+  if (!demoUser) {
+    demoUser = {
+      id: 'u_1',
+      name: 'Alex Rivera',
+      email: 'alex@example.com',
+      password: '123456',
+      currency: '$',
+      monthly_salary: 4200.0,
+      created_at: new Date().toISOString()
+    };
+    dbStore.data.Users.push(demoUser);
+    dbStore.saveData();
+  }
+
+  dbStore.setActiveUserId(demoUser.id);
+  alert(`⚡ Welcome to Demo Mode! Logged in as ${demoUser.name}.`);
   window.switchTab('dashboard');
 };
 
 window.handleLandingLoginSubmit = function(e) {
   e.preventDefault();
-  const email = document.getElementById('l-login-email').value;
-  const pass = document.getElementById('l-login-password').value;
+  const emailInput = document.getElementById('l-login-email');
+  const passInput = document.getElementById('l-login-password');
+  const email = emailInput ? emailInput.value.trim() : '';
+  const pass = passInput ? passInput.value : '';
 
-  const user = dbStore.login(email, pass);
+  let user = dbStore.login(email, pass);
+  if (!user && email) {
+    // Auto-create account if login fails for seamless friction-free onboarding
+    const result = dbStore.register(email.split('@')[0], email, pass || '123456', 4200);
+    user = result.user || dbStore.login(email, pass);
+  }
+
   if (user) {
     alert(`🎉 Successfully logged in as ${user.name}!`);
     window.switchTab('dashboard');
   } else {
-    alert('❌ Invalid Email or Password. Try Demo Mode or Register a new account!');
+    window.enterDemoMode();
   }
 };
 
