@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Money Companion - Personal Budget Tracker</title>
   <meta name="description" content="A simple, lightweight, beginner-friendly personal budget tracker for daily financial clarity.">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css?v=2">
   <link rel="icon" href="assets/ai_companion_avatar.jpg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#6366F1">
@@ -382,10 +382,10 @@
 
   </div>
 
-  <script type="module" src="js/app.js"></script>
+  <script type="module" src="js/app.js?v=2"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed:', err));
+      navigator.serviceWorker.register('sw.js?v=2').then(reg => reg.update()).catch(err => console.log('SW registration failed:', err));
     }
   </script>
 </body>
