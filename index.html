@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Money Companion - Personal Budget Tracker</title>
   <meta name="description" content="A simple, lightweight, beginner-friendly personal budget tracker for daily financial clarity.">
-  <link rel="stylesheet" href="css/styles.css?v=13">
+  <link rel="stylesheet" href="css/styles.css?v=14">
   <link rel="icon" href="assets/ai_companion_avatar.jpg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#6366F1">
@@ -484,12 +484,58 @@
         </div>
       </div>
     </div>
+
+    <!-- Mobile Bottom Navigation Bar (Always Visible at Bottom of Phone when Logged In) -->
+    <nav class="mobile-bottom-nav">
+      <button onclick="window.switchTab('dashboard')" class="mobile-nav-item" data-tab="dashboard">
+        <span class="mobile-nav-icon">🏠</span>
+        <span class="mobile-nav-label">Dashboard</span>
+      </button>
+      <button onclick="window.switchTab('expenses')" class="mobile-nav-item" data-tab="expenses">
+        <span class="mobile-nav-icon">💸</span>
+        <span class="mobile-nav-label">Expenses</span>
+      </button>
+      <button onclick="window.switchTab('budget')" class="mobile-nav-item" data-tab="budget">
+        <span class="mobile-nav-icon">⚖️</span>
+        <span class="mobile-nav-label">Budget</span>
+      </button>
+      <button onclick="window.switchTab('wishlist')" class="mobile-nav-item" data-tab="wishlist">
+        <span class="mobile-nav-icon">🛒</span>
+        <span class="mobile-nav-label">Shopping</span>
+      </button>
+      <button onclick="window.openMobileMenuModal()" class="mobile-nav-item">
+        <span class="mobile-nav-icon">☰</span>
+        <span class="mobile-nav-label">All Tabs</span>
+      </button>
+    </nav>
+
+    <!-- Mobile Menu Drawer Overlay Modal (Lists ALL 10 Modules) -->
+    <div id="mobile-menu-modal" class="modal-overlay">
+      <div class="modal-content" style="max-width: 380px;">
+        <div class="modal-header">
+          <h3 class="modal-title">📑 All App Modules (10 Tabs)</h3>
+          <button onclick="window.closeMobileMenuModal()" class="btn-icon">✕</button>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 6px 0;">
+          <button onclick="window.switchTab('dashboard'); window.closeMobileMenuModal();" class="quick-chip" style="justify-content: flex-start; padding: 12px 14px; font-weight: 700;">🏠 Dashboard</button>
+          <button onclick="window.switchTab('income'); window.closeMobileMenuModal();" class="quick-chip" style="justify-content: flex-start; padding: 12px 14px; font-weight: 700;">💵 Income</button>
+          <button onclick="window.switchTab('expenses'); window.closeMobileMenuModal();" class="quick-chip" style="justify-content: flex-start; padding: 12px 14px; font-weight: 700;">💸 Expenses</button>
+          <button onclick="window.switchTab('budget'); window.closeMobileMenuModal();" class="quick-chip" style="justify-content: flex-start; padding: 12px 14px; font-weight: 700;">⚖️ Budget</button>
+          <button onclick="window.switchTab('savings'); window.closeMobileMenuModal();" class="quick-chip" style="justify-content: flex-start; padding: 12px 14px; font-weight: 700;">🏦 Savings</button>
+          <button onclick="window.switchTab('goals'); window.closeMobileMenuModal();" class="quick-chip" style="justify-content: flex-start; padding: 12px 14px; font-weight: 700;">🎯 Goals</button>
+          <button onclick="window.switchTab('wishlist'); window.closeMobileMenuModal();" class="quick-chip" style="justify-content: flex-start; padding: 12px 14px; font-weight: 700;">🛒 Shopping List</button>
+          <button onclick="window.switchTab('reports'); window.closeMobileMenuModal();" class="quick-chip" style="justify-content: flex-start; padding: 12px 14px; font-weight: 700;">📊 Reports</button>
+          <button onclick="window.switchTab('about'); window.closeMobileMenuModal();" class="quick-chip" style="justify-content: flex-start; padding: 12px 14px; font-weight: 700;">ℹ️ About Us</button>
+          <button onclick="window.switchTab('settings'); window.closeMobileMenuModal();" class="quick-chip" style="justify-content: flex-start; padding: 12px 14px; font-weight: 700;">⚙️ Settings</button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <script type="module" src="js/app.js?v=13"></script>
+  <script type="module" src="js/app.js?v=14"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js?v=13').then(reg => reg.update()).catch(err => console.log('SW registration failed:', err));
+      navigator.serviceWorker.register('sw.js?v=14').then(reg => reg.update()).catch(err => console.log('SW registration failed:', err));
     }
   </script>
 </body>

@@ -494,6 +494,14 @@ function updateUserHeader() {
   }
 }
 
+window.openMobileMenuModal = function() {
+  document.getElementById('mobile-menu-modal').classList.add('active');
+};
+
+window.closeMobileMenuModal = function() {
+  document.getElementById('mobile-menu-modal').classList.remove('active');
+};
+
 window.openAuthModal = function() {
   document.getElementById('auth-modal').classList.add('active');
   window.switchAuthTab('switch');
