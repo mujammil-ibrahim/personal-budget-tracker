@@ -73,13 +73,19 @@ window.changeCurrency = function(newSymbol) {
 window.toggleTheme = function() {
   const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
   const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', newTheme);
+  window.setThemeFromSettings(newTheme);
+};
+
+window.setThemeFromSettings = function(themeName) {
+  document.documentElement.setAttribute('data-theme', themeName);
   
   const iconBtn = document.getElementById('theme-toggle-btn');
-  if (iconBtn) iconBtn.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+  if (iconBtn) iconBtn.textContent = themeName === 'dark' ? '🌙' : '☀️';
 
   const settings = dbStore.getTable('Settings')[0];
-  if (settings) dbStore.updateItem('Settings', settings.id, { theme: newTheme });
+  if (settings) dbStore.updateItem('Settings', settings.id, { theme: themeName });
+
+  if (currentTab === 'settings') window.switchTab('settings');
 };
 
 // --- Quick Add Modal (< 10-Second Entry System) ---
@@ -168,6 +174,36 @@ window.handleIncomeSubmit = function(e) {
   window.switchTab(currentTab);
 };
 
+// --- Custom Budget Allocation Modal ---
+window.openAddBudgetModal = function() {
+  document.getElementById('add-budget-modal').classList.add('active');
+};
+
+window.closeAddBudgetModal = function() {
+  document.getElementById('add-budget-modal').classList.remove('active');
+};
+
+window.handleBudgetSubmit = function(e) {
+  e.preventDefault();
+  const category = document.getElementById('b-category').value;
+  const allocated_amount = parseFloat(document.getElementById('b-allocated').value);
+
+  if (isNaN(allocated_amount) || allocated_amount <= 0) return alert('Please enter a valid budget amount!');
+
+  const curMonth = new Date().getMonth() + 1;
+  const curYear = new Date().getFullYear();
+
+  const existing = dbStore.getTable('Budgets').find(b => b.category === category && b.month === curMonth && b.year === curYear);
+  if (existing) {
+    dbStore.updateItem('Budgets', existing.id, { allocated_amount });
+  } else {
+    dbStore.addItem('Budgets', { month: curMonth, year: curYear, category, allocated_amount, spent_amount: 0 });
+  }
+
+  window.closeAddBudgetModal();
+  window.switchTab(currentTab);
+};
+
 // --- Savings Deposit Modal ---
 window.openDepositSavingsModal = function(goalId = '') {
   const modal = document.getElementById('savings-modal');
@@ -203,6 +239,38 @@ window.handleSavingsSubmit = function(e) {
   }
 
   window.closeSavingsModal();
+  window.switchTab(currentTab);
+};
+
+// --- Add Financial Goal Modal ---
+window.openAddGoalModal = function() {
+  document.getElementById('goal-modal').classList.add('active');
+};
+
+window.closeGoalModal = function() {
+  document.getElementById('goal-modal').classList.remove('active');
+};
+
+window.handleGoalSubmit = function(e) {
+  e.preventDefault();
+  const title = document.getElementById('g-title').value.trim();
+  const target_amount = parseFloat(document.getElementById('g-target').value);
+  const target_date = document.getElementById('g-date').value || '';
+  const priority = document.getElementById('g-priority').value;
+
+  if (!title || isNaN(target_amount) || target_amount <= 0) return alert('Please enter valid goal details!');
+
+  dbStore.addItem('Goals', {
+    title,
+    target_amount,
+    current_amount: 0,
+    target_date,
+    category: 'General',
+    priority,
+    status: 'active'
+  });
+
+  window.closeGoalModal();
   window.switchTab(currentTab);
 };
 
@@ -259,7 +327,7 @@ window.evaluatePurchase = function() {
   resultBox.innerHTML = `<strong>${evalResult.title}</strong><br/>${evalResult.text.replace(/\*\*/g, '')}`;
 };
 
-// --- Budget Auto Allocation ---
+// --- Budget Auto Allocation (50/30/20 Helper) ---
 window.autoAllocateBudgets = function() {
   const metrics = dbStore.getDashboardMetrics();
   const monthlySalary = metrics.monthIncome || 4000;
@@ -289,13 +357,23 @@ window.autoAllocateBudgets = function() {
   window.switchTab(currentTab);
 };
 
-// --- AI Companion Drawer Engine ---
+// --- AI Companion Drawer Engine & Interactive Custom Messaging ---
 window.openAIDrawer = function() {
   document.getElementById('ai-drawer').classList.add('open');
 };
 
 window.closeAIDrawer = function() {
   document.getElementById('ai-drawer').classList.remove('open');
+};
+
+window.handleAIChatSubmit = function(e) {
+  e.preventDefault();
+  const inputEl = document.getElementById('ai-custom-input');
+  const text = inputEl ? inputEl.value.trim() : '';
+  if (!text) return;
+  
+  window.sendAIQuery(text);
+  if (inputEl) inputEl.value = '';
 };
 
 window.sendAIQuery = function(promptText) {
@@ -316,7 +394,7 @@ window.sendAIQuery = function(promptText) {
     aiBubble.innerHTML = `<strong>${response.title}</strong><br/>${response.text.replace(/\*\*/g, '')}`;
     chatBody.appendChild(aiBubble);
     chatBody.scrollTop = chatBody.scrollHeight;
-  }, 300);
+  }, 200);
 
   chatBody.scrollTop = chatBody.scrollHeight;
 };
@@ -389,5 +467,9 @@ document.addEventListener('keydown', (e) => {
 
 // App Startup
 document.addEventListener('DOMContentLoaded', () => {
+  const settings = dbStore.getTable('Settings')[0];
+  if (settings && settings.theme) {
+    document.documentElement.setAttribute('data-theme', settings.theme);
+  }
   window.switchTab('dashboard');
 });

@@ -95,7 +95,7 @@
       ✨
     </button>
 
-    <!-- AI Money Companion Drawer -->
+    <!-- AI Money Companion Drawer with Interactive Custom Messaging -->
     <div id="ai-drawer" class="ai-drawer">
       <div class="ai-drawer-header">
         <div style="display: flex; align-items: center; gap: 12px;">
@@ -110,13 +110,13 @@
 
       <div id="ai-chat-body" class="ai-chat-body">
         <div class="chat-bubble ai">
-          Hi Alex! 👋 I'm your Personal Money Companion. Select any quick question below or ask me about your budget!
+          Hi Alex! 👋 I'm your Personal Money Companion. Type any custom question below or tap a quick prompt card!
         </div>
 
         <!-- Quick AI Prompt Cards -->
         <div class="quick-prompts-container">
           <div class="prompt-card" onclick="window.sendAIQuery('Can I buy this?')">
-            <span>🤔 Can I buy this item?</span>
+            <span>🤔 Can I buy an item?</span>
             <span style="color: var(--accent-violet);">→</span>
           </div>
           <div class="prompt-card" onclick="window.sendAIQuery('How much budget is left?')">
@@ -137,6 +137,12 @@
           </div>
         </div>
       </div>
+
+      <!-- Interactive Custom Chat Message Input Box -->
+      <form onsubmit="window.handleAIChatSubmit(event)" style="padding: 12px 16px; border-top: 1px solid var(--border-color); background: var(--bg-surface); display: flex; gap: 8px;">
+        <input type="text" id="ai-custom-input" placeholder="Type a message (e.g. Can I buy a watch for $150?)" class="form-input" style="flex: 1; height: 42px; font-size: 13px;">
+        <button type="submit" class="btn-primary" style="padding: 0 16px; height: 42px; font-size: 13px;">Send ✨</button>
+      </form>
     </div>
 
     <!-- Quick Add Modal (< 10-Second Entry System) -->
@@ -158,7 +164,7 @@
 
           <div class="form-group">
             <label class="form-label">Merchant / Description (Optional)</label>
-            <input type="text" id="qa-merchant" placeholder="e.g. Starbuck, Chipotle, Target" class="form-input">
+            <input type="text" id="qa-merchant" placeholder="e.g. Starbucks, Chipotle, Grocery" class="form-input">
           </div>
 
           <div class="form-group">
@@ -235,7 +241,41 @@
       </div>
     </div>
 
-    <!-- Savings Modal -->
+    <!-- Budget Allocation Modal (New Custom Category Budget) -->
+    <div id="add-budget-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">⚖️ Set Category Budget</h3>
+          <button onclick="window.closeAddBudgetModal()" class="btn-icon">✕</button>
+        </div>
+        <form onsubmit="window.handleBudgetSubmit(event)">
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select id="b-category" class="form-select">
+              <option value="Rent">Rent & Housing</option>
+              <option value="Dining">Dining & Food</option>
+              <option value="Utilities">Utilities & Bills</option>
+              <option value="Shopping">Shopping & Clothes</option>
+              <option value="Transport">Transport & Fuel</option>
+              <option value="Entertainment">Entertainment & Fun</option>
+              <option value="Health">Health & Fitness</option>
+              <option value="Grocery">Grocery</option>
+              <option value="Misc">Miscellaneous</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Monthly Allocated Budget Amount</label>
+            <input type="number" step="0.01" id="b-allocated" placeholder="e.g. 500" class="form-input" required>
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+            <button type="button" onclick="window.closeAddBudgetModal()" class="btn-primary" style="background: var(--bg-surface-elevated); color: var(--text-primary);">Cancel</button>
+            <button type="submit" class="btn-primary">Save Budget</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Savings Deposit Modal -->
     <div id="savings-modal" class="modal-overlay">
       <div class="modal-content">
         <div class="modal-header">
@@ -258,6 +298,42 @@
           <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
             <button type="button" onclick="window.closeSavingsModal()" class="btn-primary" style="background: var(--bg-surface-elevated); color: var(--text-primary);">Cancel</button>
             <button type="submit" class="btn-primary btn-emerald">Deposit Funds</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Financial Goal Modal (Add New Goal) -->
+    <div id="goal-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">🎯 Add New Goal</h3>
+          <button onclick="window.closeGoalModal()" class="btn-icon">✕</button>
+        </div>
+        <form onsubmit="window.handleGoalSubmit(event)">
+          <div class="form-group">
+            <label class="form-label">Goal Title</label>
+            <input type="text" id="g-title" placeholder="e.g. Emergency Fund, New Phone" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Target Amount</label>
+            <input type="number" step="0.01" id="g-target" placeholder="e.g. 2000" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Target Date (Optional)</label>
+            <input type="date" id="g-date" class="form-input">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Priority</label>
+            <select id="g-priority" class="form-select">
+              <option value="High">🔴 High Priority (Must Have)</option>
+              <option value="Medium" selected>🟡 Medium Priority (Nice to Have)</option>
+              <option value="Low">🔵 Low Priority (Optional)</option>
+            </select>
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+            <button type="button" onclick="window.closeGoalModal()" class="btn-primary" style="background: var(--bg-surface-elevated); color: var(--text-primary);">Cancel</button>
+            <button type="submit" class="btn-primary btn-emerald">Save Goal</button>
           </div>
         </form>
       </div>
@@ -289,11 +365,11 @@
             </select>
           </div>
           <div class="form-group">
-            <label class="form-label">Urgency</label>
+            <label class="form-label">Priority</label>
             <select id="wl-urgency" class="form-select">
-              <option value="Want">Want (Desirable)</option>
-              <option value="Need">Need (Essential)</option>
-              <option value="Impulse">Impulse (Spontaneous)</option>
+              <option value="High">🔴 High Priority (Must Have)</option>
+              <option value="Medium" selected>🟡 Medium Priority (Nice to Have)</option>
+              <option value="Low">🔵 Low Priority (Optional)</option>
             </select>
           </div>
           <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
