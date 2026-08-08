@@ -755,6 +755,139 @@ window.saveUserSettings = function(e) {
   window.switchTab(currentTab);
 };
 
+// --- Mini Calculator Widget ---
+let calcExpression = '';
+let calcCurrentVal = '0';
+let calcResetOnNext = false;
+
+window.openCalcModal = function() {
+  const modal = document.getElementById('calc-modal');
+  if (modal) modal.classList.add('active');
+  window.updateCalcDisplay();
+};
+
+window.closeCalcModal = function() {
+  const modal = document.getElementById('calc-modal');
+  if (modal) modal.classList.remove('active');
+};
+
+window.updateCalcDisplay = function() {
+  const mainDisp = document.getElementById('calc-main-display');
+  const exprDisp = document.getElementById('calc-expr-display');
+  if (mainDisp) mainDisp.innerText = calcCurrentVal || '0';
+  if (exprDisp) exprDisp.innerText = calcExpression;
+};
+
+window.calcInputDigit = function(digit) {
+  if (calcResetOnNext) {
+    calcCurrentVal = digit === '.' ? '0.' : digit;
+    calcResetOnNext = false;
+  } else {
+    if (digit === '.') {
+      if (!calcCurrentVal.includes('.')) {
+        calcCurrentVal = calcCurrentVal === '' ? '0.' : calcCurrentVal + '.';
+      }
+    } else if (digit === '00') {
+      if (calcCurrentVal !== '0' && calcCurrentVal !== '') {
+        calcCurrentVal += '00';
+      }
+    } else {
+      if (calcCurrentVal === '0') {
+        calcCurrentVal = digit;
+      } else {
+        calcCurrentVal += digit;
+      }
+    }
+  }
+  window.updateCalcDisplay();
+};
+
+window.calcInputOp = function(op) {
+  if (calcCurrentVal !== '') {
+    calcExpression += ` ${calcCurrentVal} ${op}`;
+    calcCurrentVal = '0';
+    calcResetOnNext = false;
+  } else if (calcExpression !== '') {
+    calcExpression = calcExpression.trim().slice(0, -1) + op;
+  }
+  window.updateCalcDisplay();
+};
+
+window.calcClear = function() {
+  calcExpression = '';
+  calcCurrentVal = '0';
+  calcResetOnNext = false;
+  window.updateCalcDisplay();
+};
+
+window.calcBackspace = function() {
+  if (calcCurrentVal.length > 1) {
+    calcCurrentVal = calcCurrentVal.slice(0, -1);
+  } else {
+    calcCurrentVal = '0';
+  }
+  window.updateCalcDisplay();
+};
+
+window.calcEquals = function() {
+  try {
+    const fullExpr = (calcExpression + ' ' + calcCurrentVal).trim();
+    if (!fullExpr) return;
+    
+    // Sanitize and replace user-friendly symbols with JS operators
+    const safeExpr = fullExpr
+      .replace(/×/g, '*')
+      .replace(/÷/g, '/')
+      .replace(/%/g, '/ 100');
+
+    // Safe mathematical evaluation
+    const result = Function(`'use strict'; return (${safeExpr})`)();
+    
+    if (isNaN(result) || !isFinite(result)) {
+      calcCurrentVal = 'Error';
+    } else {
+      const formatted = Number.isInteger(result) ? result.toString() : parseFloat(result.toFixed(2)).toString();
+      calcExpression = `${fullExpr} =`;
+      calcCurrentVal = formatted;
+      calcResetOnNext = true;
+    }
+  } catch (err) {
+    calcCurrentVal = 'Error';
+  }
+  window.updateCalcDisplay();
+};
+
+window.calcApply503020 = function() {
+  const val = parseFloat(calcCurrentVal);
+  if (isNaN(val) || val <= 0) return alert('Please enter a valid amount first!');
+  const needs = (val * 0.50).toFixed(2);
+  const wants = (val * 0.30).toFixed(2);
+  const savings = (val * 0.20).toFixed(2);
+  const currency = dbStore.getDashboardMetrics().currency || '$';
+
+  alert(`📊 50/30/20 Budget Breakdown for ${currency}${val.toLocaleString()}:\n\n• Needs (50%): ${currency}${needs}\n• Wants (30%): ${currency}${wants}\n• Savings (20%): ${currency}${savings}`);
+};
+
+window.calcApplyDaily = function() {
+  const val = parseFloat(calcCurrentVal);
+  if (isNaN(val) || val <= 0) return alert('Please enter a valid monthly amount first!');
+  const daily = (val / 30).toFixed(2);
+  const currency = dbStore.getDashboardMetrics().currency || '$';
+
+  calcExpression = `${val} ÷ 30 days =`;
+  calcCurrentVal = daily;
+  calcResetOnNext = true;
+  window.updateCalcDisplay();
+
+  alert(`📅 Safe Daily Spending Limit:\n${currency}${val.toLocaleString()} / 30 days = ${currency}${daily} per day`);
+};
+
+window.calcCopyResult = function() {
+  if (!calcCurrentVal || calcCurrentVal === 'Error') return;
+  navigator.clipboard.writeText(calcCurrentVal);
+  alert(`📋 Copied "${calcCurrentVal}" to clipboard!`);
+};
+
 // Global Hotkeys (Press '+' for Quick Add Modal)
 document.addEventListener('keydown', (e) => {
   if (e.key === '+' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {

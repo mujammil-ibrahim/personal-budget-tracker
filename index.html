@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Money Companion - Personal Budget Tracker</title>
   <meta name="description" content="A simple, lightweight, beginner-friendly personal budget tracker for daily financial clarity.">
-  <link rel="stylesheet" href="css/styles.css?v=25">
+  <link rel="stylesheet" href="css/styles.css?v=26">
   <link rel="icon" href="assets/ai_companion_avatar.jpg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#6366F1">
@@ -98,6 +98,11 @@
       ✨
     </button>
 
+    <!-- Floating Mini Calculator FAB -->
+    <button class="calc-fab" onclick="window.openCalcModal()" title="Open Quick Calculator">
+      🧮
+    </button>
+
     <!-- AI Money Companion Drawer with Sticky Top Input Bar -->
     <div id="ai-drawer" class="ai-drawer">
       <div class="ai-drawer-sticky-top">
@@ -146,6 +151,60 @@
             <span>🎯 How much should I save this month?</span>
             <span style="color: var(--accent-violet);">→</span>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mini Calculator Overlay Modal -->
+    <div id="calc-modal" class="modal-overlay">
+      <div class="modal-content" style="max-width: 360px; padding: 20px;">
+        <div class="modal-header" style="margin-bottom: 14px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 20px;">🧮</span>
+            <h3 class="modal-title" style="font-size: 16px;">Quick Financial Calculator</h3>
+          </div>
+          <button onclick="window.closeCalcModal()" class="btn-icon">✕</button>
+        </div>
+
+        <!-- Calculator Display Screen -->
+        <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 14px; text-align: right;">
+          <div id="calc-expr-display" style="font-size: 12px; color: var(--text-muted); min-height: 16px; font-family: monospace;"></div>
+          <div id="calc-main-display" style="font-size: 32px; font-weight: 800; color: var(--accent-emerald); font-family: monospace; overflow-x: auto; white-space: nowrap;">0</div>
+        </div>
+
+        <!-- Quick Financial Tools Row -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 14px;">
+          <button onclick="window.calcApply503020()" class="quick-chip" style="font-size: 11px; justify-content: center; padding: 6px 4px; font-weight: 700;" title="Split amount into Needs 50%, Wants 30%, Savings 20%">📊 50/30/20</button>
+          <button onclick="window.calcApplyDaily()" class="quick-chip" style="font-size: 11px; justify-content: center; padding: 6px 4px; font-weight: 700;" title="Calculate daily allowance for 30 days">📅 ÷ 30 Daily</button>
+          <button onclick="window.calcCopyResult()" class="quick-chip" style="font-size: 11px; justify-content: center; padding: 6px 4px; font-weight: 700;" title="Copy current value">📋 Copy</button>
+        </div>
+
+        <!-- Keypad Grid -->
+        <div class="calc-grid">
+          <button onclick="window.calcClear()" class="calc-btn action">C</button>
+          <button onclick="window.calcBackspace()" class="calc-btn action">⌫</button>
+          <button onclick="window.calcInputOp('%')" class="calc-btn op">%</button>
+          <button onclick="window.calcInputOp('/')" class="calc-btn op">÷</button>
+
+          <button onclick="window.calcInputDigit('7')" class="calc-btn">7</button>
+          <button onclick="window.calcInputDigit('8')" class="calc-btn">8</button>
+          <button onclick="window.calcInputDigit('9')" class="calc-btn">9</button>
+          <button onclick="window.calcInputOp('*')" class="calc-btn op">×</button>
+
+          <button onclick="window.calcInputDigit('4')" class="calc-btn">4</button>
+          <button onclick="window.calcInputDigit('5')" class="calc-btn">5</button>
+          <button onclick="window.calcInputDigit('6')" class="calc-btn">6</button>
+          <button onclick="window.calcInputOp('-')" class="calc-btn op">-</button>
+
+          <button onclick="window.calcInputDigit('1')" class="calc-btn">1</button>
+          <button onclick="window.calcInputDigit('2')" class="calc-btn">2</button>
+          <button onclick="window.calcInputDigit('3')" class="calc-btn">3</button>
+          <button onclick="window.calcInputOp('+')" class="calc-btn op">+</button>
+
+          <button onclick="window.calcInputDigit('0')" class="calc-btn">0</button>
+          <button onclick="window.calcInputDigit('00')" class="calc-btn">00</button>
+          <button onclick="window.calcInputDigit('.')" class="calc-btn">.</button>
+          <button onclick="window.calcEquals()" class="calc-btn equals">=</button>
         </div>
       </div>
     </div>
@@ -529,10 +588,10 @@
     </div>
   </div>
 
-  <script type="module" src="js/app.js?v=25"></script>
+  <script type="module" src="js/app.js?v=26"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js?v=25').then(reg => reg.update()).catch(err => console.log('SW registration failed:', err));
+      navigator.serviceWorker.register('sw.js?v=26').then(reg => reg.update()).catch(err => console.log('SW registration failed:', err));
     }
   </script>
 </body>

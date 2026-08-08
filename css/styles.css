@@ -699,6 +699,81 @@ body {
   transform: scale(1.08);
 }
 
+/* Mini Calculator Floating Action Button & Keypad System */
+.calc-fab {
+  position: fixed;
+  bottom: 88px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--accent-emerald), #059669);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.35), var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 60;
+  font-size: 22px;
+  transition: transform var(--transition-fast);
+}
+
+.calc-fab:hover {
+  transform: scale(1.08);
+}
+
+.calc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.calc-btn {
+  height: 48px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  transition: all var(--transition-fast);
+}
+
+.calc-btn:active {
+  transform: scale(0.95);
+}
+
+.calc-btn:hover {
+  border-color: var(--accent-indigo);
+  background: var(--bg-card);
+}
+
+.calc-btn.op {
+  background: var(--accent-indigo-light);
+  color: var(--accent-indigo);
+  border-color: var(--accent-indigo);
+}
+
+.calc-btn.action {
+  background: var(--accent-rose-light);
+  color: var(--accent-rose);
+  border-color: var(--accent-rose);
+}
+
+.calc-btn.equals {
+  background: linear-gradient(135deg, var(--accent-emerald), #059669);
+  color: #fff;
+  border: none;
+  font-weight: 900;
+}
+
 .ai-drawer {
   position: fixed;
   top: 0;
@@ -973,5 +1048,10 @@ body.tab-landing .mobile-bottom-nav {
   }
   .ai-fab {
     bottom: 76px !important; /* Raise AI FAB above mobile bottom nav */
+    right: 16px !important;
+  }
+  .calc-fab {
+    bottom: 140px !important; /* Raise Calc FAB cleanly above AI FAB */
+    right: 16px !important;
   }
 }
