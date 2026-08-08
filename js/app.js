@@ -735,6 +735,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (settings && settings.theme) {
     document.documentElement.setAttribute('data-theme', settings.theme);
   }
-  document.body.classList.remove('auth-mode');
-  window.switchTab('dashboard');
+
+  if (dbStore.isLoggedIn()) {
+    window.switchTab('dashboard');
+  } else {
+    window.switchTab('landing');
+  }
 });

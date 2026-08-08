@@ -205,13 +205,7 @@ class Store {
   }
 
   getActiveUserId() {
-    let activeId = localStorage.getItem('mc_logged_in_user_id') || localStorage.getItem('mc_active_user_id');
-    if (!activeId) {
-      activeId = 'u_1';
-      localStorage.setItem('mc_active_user_id', activeId);
-      localStorage.setItem('mc_logged_in_user_id', activeId);
-    }
-    return activeId;
+    return localStorage.getItem('mc_logged_in_user_id') || null;
   }
 
   setActiveUserId(id) {
@@ -220,6 +214,7 @@ class Store {
       localStorage.setItem('mc_active_user_id', id);
     } else {
       localStorage.removeItem('mc_logged_in_user_id');
+      localStorage.removeItem('mc_active_user_id');
     }
   }
 
@@ -283,6 +278,7 @@ class Store {
 
   logout() {
     localStorage.removeItem('mc_logged_in_user_id');
+    localStorage.removeItem('mc_active_user_id');
   }
 
   // --- Generic Table Helper Operations with User-Data Isolation ---
