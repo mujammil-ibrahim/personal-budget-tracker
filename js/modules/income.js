@@ -15,7 +15,23 @@ export function renderIncome() {
           <h2 style="font-size: 22px; font-weight: 800;">Income Streams</h2>
           <p style="font-size: 13px; color: var(--text-secondary);">Manage salary, side hustles, and additional income</p>
         </div>
-        <button onclick="window.openIncomeModal()" class="btn-primary btn-emerald">+ Add Income</button>
+        <button onclick="window.openIncomeModal()" class="btn-primary btn-emerald">+ Add Income Stream</button>
+      </div>
+
+      <!-- Fixed Monthly Salary Settings Card -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: var(--shadow-sm);">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="font-size: 24px;">🔄</div>
+          <div>
+            <h3 style="font-size: 15px; font-weight: 700;">Fixed Monthly Salary / Paycheck</h3>
+            <p style="font-size: 12px; color: var(--text-muted);">Automatically credited at the start of every month</p>
+          </div>
+        </div>
+        <form onsubmit="window.handleSalaryUpdateSubmit(event)" style="display: flex; gap: 8px; align-items: center;">
+          <span style="font-size: 16px; font-weight: 700;">${metrics.currency}</span>
+          <input type="number" step="0.01" id="fixed-salary-input" value="${metrics.fixedSalary || 4200}" class="form-input" style="width: 140px; height: 38px; font-size: 14px; font-weight: 700;" required>
+          <button type="submit" class="btn-primary btn-emerald" style="height: 38px; font-size: 13px; white-space: nowrap;">Save Fixed Salary</button>
+        </form>
       </div>
 
       <div class="card-grid card-grid-3" style="margin-bottom: 24px;">

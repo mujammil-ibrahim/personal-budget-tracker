@@ -152,6 +152,16 @@ window.closeIncomeModal = function() {
   document.getElementById('income-modal').classList.remove('active');
 };
 
+window.handleSalaryUpdateSubmit = function(e) {
+  e.preventDefault();
+  const amount = parseFloat(document.getElementById('fixed-salary-input').value);
+  if (isNaN(amount) || amount < 0) return alert('Please enter a valid salary amount!');
+
+  dbStore.updateFixedSalary(amount);
+  alert('Fixed Monthly Salary updated successfully! It will automatically credit every month.');
+  window.switchTab(currentTab);
+};
+
 window.handleIncomeSubmit = function(e) {
   e.preventDefault();
   const amount = parseFloat(document.getElementById('inc-amount').value);

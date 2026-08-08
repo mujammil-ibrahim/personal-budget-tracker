@@ -259,9 +259,41 @@ class Store {
     this.saveData();
   }
 
+  updateFixedSalary(amount) {
+    const user = this.data.Users[0];
+    if (user) {
+      user.monthly_salary = parseFloat(amount);
+      this.saveData();
+    }
+  }
+
   getDashboardMetrics() {
     const curMonth = new Date().getMonth() + 1;
     const curYear = new Date().getFullYear();
+
+    // Auto-credit fixed monthly salary if no income exists yet for current month
+    const userProfile = this.data.Users[0] || { monthly_salary: 4200.0 };
+    const fixedSalaryAmount = parseFloat(userProfile.monthly_salary || 4200.0);
+
+    const hasMonthIncome = this.data.Income.some(i => {
+      const d = new Date(i.date);
+      return (d.getMonth() + 1) === curMonth && d.getFullYear() === curYear;
+    });
+
+    if (!hasMonthIncome && fixedSalaryAmount > 0) {
+      const firstOfMonth = `${curYear}-${String(curMonth).padStart(2, '0')}-01`;
+      this.data.Income.push({
+        id: 'inc_auto_' + Date.now(),
+        user_id: userProfile.id || 'u_1',
+        amount: fixedSalaryAmount,
+        source_name: 'Fixed Monthly Paycheck',
+        category: 'Primary',
+        date: firstOfMonth,
+        recurrence: 'monthly',
+        notes: 'Auto-credited regular salary'
+      });
+      this.saveData();
+    }
 
     const monthIncome = this.data.Income
       .filter(i => { const d = new Date(i.date); return (d.getMonth() + 1) === curMonth && d.getFullYear() === curYear; })
@@ -295,7 +327,8 @@ class Store {
       safeDailyLimit: parseFloat(safeDailyLimit),
       remainingDays,
       totalSavings,
-      currency: settings.currency_symbol
+      currency: settings.currency_symbol,
+      fixedSalary: fixedSalaryAmount
     };
   }
 }
