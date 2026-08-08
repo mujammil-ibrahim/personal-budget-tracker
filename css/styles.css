@@ -561,6 +561,10 @@ body {
   box-shadow: var(--shadow-lg);
   transform: translateY(12px);
   transition: transform var(--transition-normal);
+  max-height: 85vh;
+  max-height: 85dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .modal-overlay.active .modal-content {
@@ -1053,5 +1057,17 @@ body.tab-landing .mobile-bottom-nav {
   .calc-fab {
     bottom: 140px !important; /* Raise Calc FAB cleanly above AI FAB */
     right: 16px !important;
+  }
+  .modal-overlay {
+    padding: 10px !important;
+    padding-bottom: 75px !important; /* Clear fixed mobile bottom nav! */
+  }
+  .modal-content {
+    max-height: calc(100vh - 90px) !important;
+    max-height: calc(100dvh - 90px) !important;
+    padding: 16px 18px !important;
+  }
+  .form-group {
+    margin-bottom: 12px !important;
   }
 }

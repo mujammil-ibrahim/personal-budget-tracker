@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Money Companion - Personal Budget Tracker</title>
   <meta name="description" content="A simple, lightweight, beginner-friendly personal budget tracker for daily financial clarity.">
-  <link rel="stylesheet" href="css/styles.css?v=28">
+  <link rel="stylesheet" href="css/styles.css?v=29">
   <link rel="icon" href="assets/ai_companion_avatar.jpg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#6366F1">
@@ -473,10 +473,10 @@
               <option value="Low">🔵 Low Priority (Optional)</option>
             </select>
           </div>
-          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
-            <button type="button" onclick="window.closeWishlistModal()" class="btn-primary" style="background: var(--bg-surface-elevated); color: var(--text-primary);">Cancel</button>
-            <button type="submit" class="btn-primary">Save Planned Item ✨</button>
-    </div>
+          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px; flex-wrap: wrap;">
+            <button type="button" onclick="window.closeWishlistModal()" class="btn-primary" style="background: var(--bg-surface-elevated); color: var(--text-primary); flex: 1; min-width: 100px;">Cancel</button>
+            <button type="submit" class="btn-primary btn-emerald" style="flex: 2; min-width: 180px; font-weight: 700; height: 44px; font-size: 14px;">+ Add Planned Item ✨</button>
+          </div>
 
     <!-- Multi-User Authentication & Account Switcher Modal -->
     <div id="auth-modal" class="modal-overlay">
@@ -588,10 +588,10 @@
     </div>
   </div>
 
-  <script type="module" src="js/app.js?v=28"></script>
+  <script type="module" src="js/app.js?v=29"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js?v=28').then(reg => reg.update()).catch(err => console.log('SW registration failed:', err));
+      navigator.serviceWorker.register('sw.js?v=29').then(reg => reg.update()).catch(err => console.log('SW registration failed:', err));
     }
   </script>
 </body>
