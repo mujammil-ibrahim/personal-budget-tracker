@@ -18,24 +18,11 @@ import { renderLandingPage } from './modules/landing.js';
 import { renderAbout } from './modules/about.js';
 
 // State
-let currentTab = 'landing';
+let currentTab = 'dashboard';
 
 // --- Tab Switcher & Navigation ---
 window.switchTab = function(tabName) {
-  const isLoggedIn = dbStore.isLoggedIn();
-
-  // If not logged in, enforce landing auth page
-  if (!isLoggedIn && tabName !== 'landing') {
-    tabName = 'landing';
-  }
-
-  currentTab = tabName;
-
-  if (!isLoggedIn) {
-    document.body.classList.add('auth-mode');
-  } else {
-    document.body.classList.remove('auth-mode');
-  }
+  currentTab = tabName || 'dashboard';
 
   // Sync Currency Dropdown
   const settings = dbStore.getTable('Settings')[0];
@@ -44,15 +31,14 @@ window.switchTab = function(tabName) {
     topCurrencySelect.value = settings.currency_symbol || '$';
   }
 
-  // Update Nav Active State
-  document.querySelectorAll('.nav-item').forEach(item => {
-    item.classList.toggle('active', item.dataset.tab === tabName);
+  // Update Nav Active State (Sidebar & Mobile Nav)
+  document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.tab === currentTab);
   });
 
   // Render View Content
   const container = document.getElementById('page-content');
-  switch(tabName) {
-    case 'landing': container.innerHTML = renderLandingPage(); break;
+  switch(currentTab) {
     case 'dashboard': container.innerHTML = renderDashboard(); break;
     case 'income': container.innerHTML = renderIncome(); break;
     case 'expenses': container.innerHTML = renderExpenses(); break;
@@ -62,11 +48,12 @@ window.switchTab = function(tabName) {
     case 'wishlist': container.innerHTML = renderWishlist(); break;
     case 'reports': container.innerHTML = renderReports(); break;
     case 'about': container.innerHTML = renderAbout(); break;
+    case 'landing': container.innerHTML = renderLandingPage(); break;
     case 'settings': container.innerHTML = renderSettings(); break;
     default: container.innerHTML = renderDashboard();
   }
 
-  if (isLoggedIn) updateUserHeader();
+  updateUserHeader();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
@@ -747,12 +734,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (settings && settings.theme) {
     document.documentElement.setAttribute('data-theme', settings.theme);
   }
-
-  if (!dbStore.isLoggedIn()) {
-    document.body.classList.add('auth-mode');
-  } else {
-    document.body.classList.remove('auth-mode');
-  }
-
-  window.switchTab(dbStore.isLoggedIn() ? 'dashboard' : 'landing');
+  document.body.classList.remove('auth-mode');
+  window.switchTab('dashboard');
 });

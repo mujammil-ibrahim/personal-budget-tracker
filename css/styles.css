@@ -885,26 +885,3 @@ body {
     bottom: 76px !important; /* Raise AI FAB above mobile bottom nav */
   }
 }
-
-/* Auth Mode: ABSOLUTELY HIDES Sidebar, Nav, Top Bar, Mobile Bottom Nav, and AI FAB when Logged Out */
-body.auth-mode .app-sidebar,
-body.auth-mode .sidebar,
-body.auth-mode .top-bar,
-body.auth-mode header.top-bar,
-body.auth-mode .mobile-bottom-nav,
-body.auth-mode .ai-fab,
-body.auth-mode aside,
-body.auth-mode nav {
-  display: none !important;
-  visibility: hidden !important;
-  height: 0 !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-  overflow: hidden !important;
-}
-
-body.auth-mode .main-content {
-  margin-left: 0 !important;
-  padding: 20px 16px !important;
-  max-width: 100% !important;
-}

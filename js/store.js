@@ -205,7 +205,13 @@ class Store {
   }
 
   getActiveUserId() {
-    return localStorage.getItem('mc_logged_in_user_id') || localStorage.getItem('mc_active_user_id') || null;
+    let activeId = localStorage.getItem('mc_logged_in_user_id') || localStorage.getItem('mc_active_user_id');
+    if (!activeId) {
+      activeId = 'u_1';
+      localStorage.setItem('mc_active_user_id', activeId);
+      localStorage.setItem('mc_logged_in_user_id', activeId);
+    }
+    return activeId;
   }
 
   setActiveUserId(id) {
