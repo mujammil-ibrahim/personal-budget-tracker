@@ -1070,4 +1070,23 @@ body.tab-landing .mobile-bottom-nav {
   .form-group {
     margin-bottom: 12px !important;
   }
+  .budget-meter-card {
+    padding: 12px 14px !important;
+    margin-bottom: 16px !important;
+  }
+  .quick-action-hub {
+    gap: 8px !important;
+    margin-bottom: 16px !important;
+    padding-bottom: 4px !important;
+  }
+  .quick-chip {
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+  }
+  .stat-card {
+    padding: 14px 16px !important;
+  }
+  .stat-value {
+    font-size: 20px !important;
+  }
 }

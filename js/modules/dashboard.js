@@ -95,21 +95,19 @@ export function renderDashboard() {
       </div>
 
       <!-- Budget Progress Meter -->
-      <div class="budget-meter-card">
-        <div class="meter-header">
+      <div class="budget-meter-card" style="padding: 16px 18px; margin-bottom: 20px;">
+        <div class="meter-header" style="flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px;">
           <div>
-            <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">Overall Budget & Cash Health</h3>
-            <p style="font-size: 13px; color: var(--text-secondary);">
-              Spent ${metrics.currency}${metrics.monthExpenses.toLocaleString('en-US', { minimumFractionDigits: 2 })} of ${metrics.totalAllocatedBudget > 0 ? `${metrics.currency}${metrics.totalAllocatedBudget.toLocaleString()} allocated budget` : `${metrics.currency}${metrics.monthIncome.toLocaleString()} income`}. 
-              <strong style="color: var(--accent-emerald);">Net Cash Left: ${metrics.currency}${metrics.netAvailableBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</strong>
+            <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 2px;">Overall Budget & Cash Health</h3>
+            <p style="font-size: 12px; color: var(--text-secondary); margin: 0;">
+              Spent ${metrics.currency}${metrics.monthExpenses.toLocaleString('en-US', { minimumFractionDigits: 2 })} of ${metrics.currency}${(metrics.totalAllocatedBudget > 0 ? metrics.totalAllocatedBudget : metrics.monthIncome).toLocaleString('en-US', { minimumFractionDigits: 2 })} budget (${budgetPct}%)
             </p>
           </div>
-          <div style="text-align: right;">
-            <div style="font-size: 18px; font-weight: 800; color: var(--text-primary);">${metrics.currency}${metrics.monthExpenses.toLocaleString('en-US', { minimumFractionDigits: 2 })} / ${metrics.currency}${(metrics.totalAllocatedBudget > 0 ? metrics.totalAllocatedBudget : metrics.monthIncome).toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
-            <div style="font-size: 12px; color: var(--accent-emerald); font-weight: 700;">${metrics.currency}${metrics.netAvailableBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })} Available</div>
+          <div style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-md); padding: 4px 10px;">
+            <div style="font-size: 12px; color: var(--accent-emerald); font-weight: 800;">${metrics.currency}${metrics.netAvailableBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })} Net Cash Left</div>
           </div>
         </div>
-        <div class="progress-track">
+        <div class="progress-track" style="height: 8px;">
           <div class="progress-fill ${progressColorClass}" style="width: ${budgetPct}%;"></div>
         </div>
       </div>
