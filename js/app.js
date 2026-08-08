@@ -21,7 +21,9 @@ import { renderAbout } from './modules/about.js';
 let currentTab = 'dashboard';
 
 // --- Tab Switcher & Navigation ---
-window.switchTab = function(tabName) {
+window.switchTab = function(tabName, preserveScroll = false) {
+  const currentScrollY = window.scrollY;
+  const isSameTab = (currentTab === tabName);
   currentTab = tabName || 'dashboard';
   document.body.className = 'tab-' + currentTab;
 
@@ -64,7 +66,12 @@ window.switchTab = function(tabName) {
   }
 
   updateUserHeader();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (preserveScroll || isSameTab) {
+    window.scrollTo(0, currentScrollY);
+  } else {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
 };
 
 window.handleLogout = function() {
@@ -141,7 +148,7 @@ window.quickLogExpense = function(category, amount, merchant = '') {
     payment_method: 'Card',
     notes: '1-Tap Quick Log'
   });
-  window.switchTab(currentTab);
+  window.switchTab(currentTab, true);
 };
 
 window.handleQuickAddSubmit = function(e) {
