@@ -14,6 +14,7 @@ import { renderGoals } from './modules/goals.js';
 import { renderWishlist } from './modules/wishlist.js';
 import { renderReports } from './modules/reports.js';
 import { renderSettings } from './modules/settings.js';
+import { renderLandingPage } from './modules/landing.js';
 
 // State
 let currentTab = 'dashboard';
@@ -37,6 +38,7 @@ window.switchTab = function(tabName) {
   // Render View Content
   const container = document.getElementById('page-content');
   switch(tabName) {
+    case 'landing': container.innerHTML = renderLandingPage(); break;
     case 'dashboard': container.innerHTML = renderDashboard(); break;
     case 'income': container.innerHTML = renderIncome(); break;
     case 'expenses': container.innerHTML = renderExpenses(); break;
@@ -550,6 +552,46 @@ window.handleLoginSubmit = function(e) {
     window.switchTab(currentTab);
   } else {
     alert('❌ Invalid Email or Password. Try again or select from Registered Accounts!');
+  }
+};
+
+window.openLandingPage = function() {
+  window.switchTab('landing');
+};
+
+window.enterDemoMode = function() {
+  dbStore.setActiveUserId('u_1');
+  alert('⚡ Welcome to Demo Mode! Logged in as Alex Rivera.');
+  window.switchTab('dashboard');
+};
+
+window.handleLandingLoginSubmit = function(e) {
+  e.preventDefault();
+  const email = document.getElementById('l-login-email').value;
+  const pass = document.getElementById('l-login-password').value;
+
+  const user = dbStore.login(email, pass);
+  if (user) {
+    alert(`🎉 Successfully logged in as ${user.name}!`);
+    window.switchTab('dashboard');
+  } else {
+    alert('❌ Invalid Email or Password. Try Demo Mode or Register a new account!');
+  }
+};
+
+window.handleLandingRegisterSubmit = function(e) {
+  e.preventDefault();
+  const name = document.getElementById('l-reg-name').value.trim();
+  const email = document.getElementById('l-reg-email').value.trim();
+  const pass = document.getElementById('l-reg-password').value;
+  const salary = document.getElementById('l-reg-salary').value;
+
+  const result = dbStore.register(name, email, pass, salary);
+  if (result.error) {
+    alert(`❌ ${result.error}`);
+  } else {
+    alert(`🎉 Welcome ${name}! Your new account has been created.`);
+    window.switchTab('dashboard');
   }
 };
 
