@@ -258,7 +258,15 @@ window.openDepositSavingsModal = function(goalId = '') {
   const modal = document.getElementById('savings-modal');
   modal.classList.add('active');
   const goalSelect = document.getElementById('sav-goal-id');
-  if (goalId && goalSelect) goalSelect.value = goalId;
+  if (goalSelect) {
+    const goals = dbStore.getTable('Goals');
+    const currency = dbStore.getDashboardMetrics().currency || '$';
+    goalSelect.innerHTML = `
+      <option value="">-- Select Target Goal (Optional) --</option>
+      ${goals.map(g => `<option value="${g.id}">${g.title} (${currency}${parseFloat(g.target_amount || 0).toLocaleString()})</option>`).join('')}
+    `;
+    if (goalId) goalSelect.value = goalId;
+  }
 };
 
 window.closeSavingsModal = function() {
