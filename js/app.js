@@ -737,5 +737,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (settings && settings.theme) {
     document.documentElement.setAttribute('data-theme', settings.theme);
   }
-  window.switchTab('landing');
+
+  if (!dbStore.isLoggedIn()) {
+    document.body.classList.add('auth-mode');
+  } else {
+    document.body.classList.remove('auth-mode');
+  }
+
+  window.switchTab(dbStore.isLoggedIn() ? 'dashboard' : 'landing');
 });
