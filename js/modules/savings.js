@@ -54,9 +54,10 @@ export function renderSavings() {
           <span style="font-size: 11px; color: var(--accent-indigo); font-weight: 600;">(↔ Swipe table)</span>
         </div>
         <div class="table-scroll-wrapper">
-          <table class="data-table">
+          <table class="data-table" id="savings-table">
             <thead>
               <tr>
+                <th style="width: 36px; text-align: center;"><input type="checkbox" onchange="window.toggleSelectAllRows('Savings', this)" class="master-select-checkbox" title="Select All"></th>
                 <th>Date</th>
                 <th>Goal Allocated</th>
                 <th>Notes</th>
@@ -66,11 +67,12 @@ export function renderSavings() {
             </thead>
             <tbody>
               ${savings.length === 0 ? `
-                <tr><td colspan="5" class="empty-state">No deposits logged yet. Tap + Quick Savings Deposit!</td></tr>
+                <tr><td colspan="6" class="empty-state">No deposits logged yet. Tap + Quick Savings Deposit!</td></tr>
               ` : savings.map(sav => {
                 const matchedGoal = goals.find(g => g.id === sav.goal_id);
                 return `
                   <tr>
+                    <td style="text-align: center;"><input type="checkbox" value="${sav.id}" onchange="window.onRowSelectChange('Savings', this)" class="row-select-checkbox"></td>
                     <td>${sav.deposit_date}</td>
                     <td style="font-weight: 600;">${matchedGoal ? matchedGoal.title : 'General Savings'}</td>
                     <td style="color: var(--text-secondary); font-size: 13px;">${sav.notes || '-'}</td>

@@ -66,6 +66,7 @@ export function renderExpenses() {
           <table class="data-table" id="expenses-table">
             <thead>
               <tr>
+                <th style="width: 36px; text-align: center;"><input type="checkbox" onchange="window.toggleSelectAllRows('Expenses', this)" class="master-select-checkbox" title="Select All"></th>
                 <th>Date</th>
                 <th>Merchant / Item</th>
                 <th>Category</th>
@@ -77,9 +78,10 @@ export function renderExpenses() {
             </thead>
             <tbody id="expenses-tbody">
               ${expenses.length === 0 ? `
-                <tr><td colspan="7" class="empty-state">No expense records found.</td></tr>
+                <tr><td colspan="8" class="empty-state">No expense records found.</td></tr>
               ` : expenses.map(exp => `
                 <tr>
+                  <td style="text-align: center;"><input type="checkbox" value="${exp.id}" onchange="window.onRowSelectChange('Expenses', this)" class="row-select-checkbox"></td>
                   <td>${exp.date}</td>
                   <td style="font-weight: 600;">${exp.merchant || 'Expense'}</td>
                   <td><span class="badge badge-indigo">${exp.category}</span></td>

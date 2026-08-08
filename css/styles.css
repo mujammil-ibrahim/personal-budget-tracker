@@ -530,6 +530,38 @@ body {
   color: var(--accent-indigo);
 }
 
+/* Floating Bulk Delete Action Bar */
+.bulk-delete-bar {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 95;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  padding: 10px 18px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: calc(100% - 32px);
+  max-width: 480px;
+  backdrop-filter: blur(12px);
+}
+
+.row-select-checkbox, .master-select-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent-indigo);
+  cursor: pointer;
+}
+
+tr.selected-row {
+  background: rgba(99, 102, 241, 0.12) !important;
+}
+
 /* Modals & Quick Add System (<10 Sec Entry) */
 .modal-overlay {
   position: fixed;

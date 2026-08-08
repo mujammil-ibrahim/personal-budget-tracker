@@ -93,9 +93,10 @@ export function renderWishlist() {
           <h3 style="font-size: 16px; font-weight: 700;">Planned Items List <span style="font-size: 11px; color: var(--accent-indigo); font-weight: 600; margin-left: 4px;">(↔ Swipe)</span></h3>
         </div>
         <div class="table-scroll-wrapper">
-          <table class="data-table">
+          <table class="data-table" id="wishlist-table">
             <thead>
               <tr>
+                <th style="width: 36px; text-align: center;"><input type="checkbox" onchange="window.toggleSelectAllRows('Wishlist', this)" class="master-select-checkbox" title="Select All"></th>
                 <th>Item Name</th>
                 <th>Category</th>
                 <th>When to Buy</th>
@@ -106,7 +107,7 @@ export function renderWishlist() {
             </thead>
             <tbody>
               ${items.length === 0 ? `
-                <tr><td colspan="6" class="empty-state">No items found for this timing filter. Tap "+ Add Planned Item"!</td></tr>
+                <tr><td colspan="7" class="empty-state">No items found for this timing filter. Tap "+ Add Planned Item"!</td></tr>
               ` : items.map(item => {
                 let timingBadge = '<span class="badge badge-indigo">📆 This Month</span>';
                 if (item.buy_timing === 'now' || item.buy_timing === 'today') timingBadge = '<span class="badge badge-rose">⚡ Today</span>';
@@ -119,6 +120,7 @@ export function renderWishlist() {
 
                 return `
                   <tr>
+                    <td style="text-align: center;"><input type="checkbox" value="${item.id}" onchange="window.onRowSelectChange('Wishlist', this)" class="row-select-checkbox"></td>
                     <td style="font-weight: 600;">${item.item_name}</td>
                     <td><span class="badge badge-indigo">${item.category || 'General'}</span></td>
                     <td>${timingBadge}</td>

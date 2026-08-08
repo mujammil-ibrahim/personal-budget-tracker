@@ -56,9 +56,10 @@ export function renderIncome() {
           <h3 style="font-size: 16px; font-weight: 700;">Income Log <span style="font-size: 11px; color: var(--accent-indigo); font-weight: 600; margin-left: 4px;">(↔ Swipe)</span></h3>
         </div>
         <div class="table-scroll-wrapper">
-          <table class="data-table">
+          <table class="data-table" id="income-table">
             <thead>
               <tr>
+                <th style="width: 36px; text-align: center;"><input type="checkbox" onchange="window.toggleSelectAllRows('Income', this)" class="master-select-checkbox" title="Select All"></th>
                 <th>Date</th>
                 <th>Source Name</th>
                 <th>Category</th>
@@ -70,9 +71,10 @@ export function renderIncome() {
             </thead>
             <tbody>
               ${incomes.length === 0 ? `
-                <tr><td colspan="7" class="empty-state">No income records found. Add your salary or bonus!</td></tr>
+                <tr><td colspan="8" class="empty-state">No income records found. Add your salary or bonus!</td></tr>
               ` : incomes.map(inc => `
                 <tr>
+                  <td style="text-align: center;"><input type="checkbox" value="${inc.id}" onchange="window.onRowSelectChange('Income', this)" class="row-select-checkbox"></td>
                   <td>${inc.date}</td>
                   <td style="font-weight: 600;">${inc.source_name}</td>
                   <td><span class="badge badge-emerald">${inc.category}</span></td>

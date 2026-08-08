@@ -308,6 +308,19 @@ class Store {
     this.recalculateBudgets();
   }
 
+  deleteMultipleItems(tableName, ids = []) {
+    if (!this.data[tableName] || !Array.isArray(ids) || ids.length === 0) return 0;
+    const activeId = this.getActiveUserId();
+    const initialLength = this.data[tableName].length;
+    this.data[tableName] = this.data[tableName].filter(item => {
+      if (item.user_id && item.user_id !== activeId) return true;
+      return !ids.includes(item.id);
+    });
+    this.saveData();
+    this.recalculateBudgets();
+    return initialLength - this.data[tableName].length;
+  }
+
   updateItem(tableName, id, updates) {
     const idx = this.data[tableName].findIndex(i => i.id === id);
     if (idx !== -1) {

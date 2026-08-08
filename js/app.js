@@ -718,7 +718,94 @@ window.sendAIQuery = function(promptText) {
 window.deleteRecord = function(tableName, id) {
   if (confirm(`Are you sure you want to delete this ${tableName.toLowerCase()} entry?`)) {
     dbStore.deleteItem(tableName, id);
-    window.switchTab(currentTab);
+    window.switchTab(currentTab, true);
+  }
+};
+
+// --- Multi-Selection Bulk Deletion System ---
+window.toggleSelectAllRows = function(tableName, masterCheckbox) {
+  const table = masterCheckbox.closest('table');
+  if (!table) return;
+  const checkboxes = table.querySelectorAll('.row-select-checkbox');
+  checkboxes.forEach(cb => {
+    cb.checked = masterCheckbox.checked;
+    const row = cb.closest('tr');
+    if (row) row.classList.toggle('selected-row', masterCheckbox.checked);
+  });
+  window.updateBulkDeleteBar(tableName, table);
+};
+
+window.onRowSelectChange = function(tableName, checkbox) {
+  const row = checkbox.closest('tr');
+  if (row) row.classList.toggle('selected-row', checkbox.checked);
+  const table = checkbox.closest('table');
+  if (table) {
+    const all = table.querySelectorAll('.row-select-checkbox');
+    const checked = table.querySelectorAll('.row-select-checkbox:checked');
+    const master = table.querySelector('.master-select-checkbox');
+    if (master) master.checked = (all.length > 0 && all.length === checked.length);
+    window.updateBulkDeleteBar(tableName, table);
+  }
+};
+
+window.updateBulkDeleteBar = function(tableName, tableEl) {
+  let bar = document.getElementById('bulk-delete-bar');
+  if (!tableEl) {
+    const tableId = tableName.toLowerCase() + '-table';
+    tableEl = document.getElementById(tableId);
+  }
+  if (!tableEl) return;
+
+  const checkedBoxes = tableEl.querySelectorAll('.row-select-checkbox:checked');
+  const count = checkedBoxes.length;
+
+  if (count > 0) {
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.id = 'bulk-delete-bar';
+      bar.className = 'bulk-delete-bar animate-fade-in';
+      document.body.appendChild(bar);
+    }
+    bar.style.display = 'flex';
+    bar.innerHTML = `
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-weight: 700; font-size: 13px;">📌 ${count} ${count === 1 ? 'item' : 'items'} selected</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <button onclick="window.clearBulkSelection('${tableName}')" class="btn-primary" style="padding: 5px 10px; font-size: 12px; background: var(--bg-surface-elevated); color: var(--text-primary);">Deselect All</button>
+        <button onclick="window.confirmBulkDelete('${tableName}')" class="btn-primary btn-rose" style="padding: 5px 12px; font-size: 12px;">🗑️ Delete Selected (${count})</button>
+      </div>
+    `;
+  } else if (bar) {
+    bar.style.display = 'none';
+  }
+};
+
+window.clearBulkSelection = function(tableName) {
+  const tableId = tableName.toLowerCase() + '-table';
+  const table = document.getElementById(tableId);
+  if (table) {
+    table.querySelectorAll('.row-select-checkbox, .master-select-checkbox').forEach(cb => cb.checked = false);
+    table.querySelectorAll('tr').forEach(r => r.classList.remove('selected-row'));
+  }
+  const bar = document.getElementById('bulk-delete-bar');
+  if (bar) bar.style.display = 'none';
+};
+
+window.confirmBulkDelete = function(tableName) {
+  const tableId = tableName.toLowerCase() + '-table';
+  const table = document.getElementById(tableId);
+  if (!table) return;
+
+  const checkedBoxes = table.querySelectorAll('.row-select-checkbox:checked');
+  const ids = Array.from(checkedBoxes).map(cb => cb.value);
+
+  if (ids.length === 0) return alert('No items selected!');
+
+  if (confirm(`Are you sure you want to delete ${ids.length} selected ${tableName.toLowerCase()} ${ids.length === 1 ? 'entry' : 'entries'}?`)) {
+    dbStore.deleteMultipleItems(tableName, ids);
+    window.clearBulkSelection(tableName);
+    window.switchTab(currentTab, true);
   }
 };
 
@@ -739,10 +826,11 @@ window.filterExpenses = function() {
   if (!tbody) return;
 
   if (expenses.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" class="empty-state">No matching transactions found.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" class="empty-state">No matching transactions found.</td></tr>`;
   } else {
     tbody.innerHTML = expenses.map(exp => `
       <tr>
+        <td style="text-align: center;"><input type="checkbox" value="${exp.id}" onchange="window.onRowSelectChange('Expenses', this)" class="row-select-checkbox"></td>
         <td>${exp.date}</td>
         <td style="font-weight: 600;">${exp.merchant || 'Expense'}</td>
         <td><span class="badge badge-indigo">${exp.category}</span></td>
