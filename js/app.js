@@ -17,7 +17,7 @@ import { renderSettings } from './modules/settings.js';
 import { renderLandingPage } from './modules/landing.js';
 
 // State
-let currentTab = 'dashboard';
+let currentTab = 'landing';
 
 // --- Tab Switcher & Navigation ---
 window.switchTab = function(tabName) {
@@ -718,5 +718,5 @@ document.addEventListener('DOMContentLoaded', () => {
   if (settings && settings.theme) {
     document.documentElement.setAttribute('data-theme', settings.theme);
   }
-  window.switchTab('dashboard');
+  window.switchTab('landing');
 });
